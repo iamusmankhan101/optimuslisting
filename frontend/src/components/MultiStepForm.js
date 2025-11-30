@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import './MultiStepForm.css';
 
 // API endpoint
-const API_BASE = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
-  ? 'http://localhost:8000' 
-  : '/api';
+const API_BASE = process.env.REACT_APP_API_URL || 
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+    ? 'http://localhost:8000' 
+    : '/api');
 
 function MultiStepForm() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -198,7 +199,10 @@ function MultiStepForm() {
                 setStatus({ type: 'error', message: data.error || 'Submission failed' });
             }
         } catch (error) {
-            setStatus({ type: 'error', message: `Network error: ${error.message}. Ensure backend is running on http://localhost:8000` });
+            const errorMsg = window.location.hostname === 'localhost' 
+                ? `Network error: ${error.message}. Ensure backend is running on http://localhost:8000`
+                : `Network error: ${error.message}. Please check your internet connection.`;
+            setStatus({ type: 'error', message: errorMsg });
         } finally {
             setLoading(false);
         }
