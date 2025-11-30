@@ -136,14 +136,23 @@ function MultiStepForm() {
             
             setStatus({ type: 'info', message: 'Submitting property listing...' });
             
+            console.log('Submitting to:', `${API_BASE}/submit`);
+            
             const response = await fetch(`${API_BASE}/submit`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 body: JSON.stringify(formData)
             });
 
+            console.log('Response status:', response.status);
+
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const errorText = await response.text();
+                console.error('Error response:', errorText);
+                throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
             }
 
             const data = await response.json();
