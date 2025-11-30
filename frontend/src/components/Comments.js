@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './Comments.css';
 
 const Comments = ({ propertyListingId }) => {
@@ -12,11 +12,7 @@ const Comments = ({ propertyListingId }) => {
     ? 'http://localhost:3000' 
     : '';
 
-  useEffect(() => {
-    fetchComments();
-  }, [propertyListingId]);
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const url = propertyListingId 
         ? `${API_BASE}/api/comments/get?property_listing_id=${propertyListingId}`
@@ -31,7 +27,11 @@ const Comments = ({ propertyListingId }) => {
     } catch (err) {
       console.error('Error fetching comments:', err);
     }
-  };
+  }, [propertyListingId, API_BASE]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
