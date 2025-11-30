@@ -238,7 +238,7 @@ function AdminJobs() {
                         />
                       </th>
                       <th>Lead</th>
-                      <th>Description</th>
+                      <th>Property Details</th>
                       <th>Agent</th>
                       <th>Tags</th>
                       <th>Submitted</th>
@@ -268,11 +268,20 @@ function AdminJobs() {
                                   <path fill="#0A66C2" d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8.98h5V22H0zM8.98 8.98h4.78v1.78h.07c.67-1.2 2.32-2.47 4.78-2.47 5.11 0 6.06 3.36 6.06 7.73V22h-5v-6.5c0-1.55-.03-3.54-2.16-3.54-2.16 0-2.49 1.68-2.49 3.42V22h-5V8.98z"/>
                                 </svg>
                               </span>
-                              <div className="row-title">{row.sub_category || 'Role'}</div>
+                              <div className="row-title">{row.property_code || 'No Code'}</div>
                             </div>
                             <div className="row-sub">{row.emirate || '-'}</div>
                           </td>
-                          <td className="truncate">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</td>
+                          <td className="truncate">
+                            <div>{row.building_name || 'N/A'}, {row.area_community || 'N/A'}</div>
+                            <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+                              {row.bedrooms ? `${row.bedrooms} Bed` : ''} 
+                              {row.bedrooms && row.bathrooms ? ' • ' : ''}
+                              {row.bathrooms ? `${row.bathrooms} Bath` : ''}
+                              {(row.bedrooms || row.bathrooms) && row.size_sqft ? ' • ' : ''}
+                              {row.size_sqft ? `${row.size_sqft} sqft` : ''}
+                            </div>
+                          </td>
                           <td className="truncate">{row.agent_name || 'Unknown'}</td>
                           <td>
                             <span className="badge purple">{row.purpose || 'Full-time'}</span>
