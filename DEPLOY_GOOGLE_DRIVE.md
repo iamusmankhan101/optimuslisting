@@ -4,8 +4,8 @@ Your Google Drive folder is ready! Follow these exact steps:
 
 ## ✅ Your Folder Details
 - **Folder Name:** Property Listings Files
-- **Folder ID:** `1iFSK34NWPlWKj6dE2RZkFDaDrobcQWYd`
-- **Folder URL:** https://drive.google.com/drive/folders/1iFSK34NWPlWKj6dE2RZkFDaDrobcQWYd
+- **Folder ID:** `1GjL05HE-A7tOn__fiIuxcgd6ZBhWxips`
+- **Folder URL:** https://drive.google.com/drive/folders/1GjL05HE-A7tOn__fiIuxcgd6ZBhWxips
 
 ## 📝 Step 1: Create Google Apps Script (2 minutes)
 
@@ -94,7 +94,7 @@ npm start
 4. **Submit the form**
 
 5. **Check Google Drive:**
-   - Go to: https://drive.google.com/drive/folders/1iFSK34NWPlWKj6dE2RZkFDaDrobcQWYd
+   - Go to: https://drive.google.com/drive/folders/1GjL05HE-A7tOn__fiIuxcgd6ZBhWxips
    - You should see a new folder like: `PROP-001_1234567890`
    - Inside, you'll find:
      - `Property Images/` folder with your images
@@ -194,4 +194,4 @@ Before deploying to Vercel:
 
 **Estimated Time:** 5 minutes
 **Difficulty:** Easy
-**Your Folder:** https://drive.google.com/drive/folders/1iFSK34NWPlWKj6dE2RZkFDaDrobcQWYd
+**Your Folder:** https://drive.google.com/drive/folders/1GjL05HE-A7tOn__fiIuxcgd6ZBhWxips

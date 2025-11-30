@@ -2,7 +2,7 @@
 // Copy this entire code and paste it into your Google Apps Script project
 
 // Configuration - Your Google Drive Folder ID
-const FOLDER_ID = '1iFSK34NWPlWKj6dE2RZkFDaDrobcQWYd';
+const FOLDER_ID = '1GjL05HE-A7tOn__fiIuxcgd6ZBhWxips';
 
 function doPost(e) {
   try {
