@@ -151,3 +151,24 @@ th, td{word-wrap:break-word;overflow-wrap:break-word}
   .admin-sidebar.open{transform:translateX(0)}
   .admin-layout.sidebar-open .admin-sidebar{transform:translateX(0)}
 }
+/* Dele
+te button styling */
+.btn.danger {
+  background: #dc3545;
+  color: white;
+}
+
+.btn.danger:hover {
+  background: #c82333;
+}
+
+.modal header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal header > div {
+  display: flex;
+  gap: 10px;
+}

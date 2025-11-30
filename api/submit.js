@@ -82,17 +82,38 @@ export default async function handler(req, res) {
     const id = result.rows[0].id;
 
     // Send to Google Sheets
+    let googleSheetsSuccess = false;
     try {
       const googleSheetWebhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
       if (googleSheetWebhookUrl) {
-        await fetch(googleSheetWebhookUrl, {
+        console.log('Sending to Google Sheets...');
+        const sheetData = { 
+          ...data, 
+          id, 
+          created_at: new Date().toISOString() 
+        };
+        
+        const response = await fetch(googleSheetWebhookUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...data, id, created_at: new Date().toISOString() })
+          headers: { 
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(sheetData)
         });
+        
+        const responseText = await response.text();
+        console.log('Google Sheets response:', response.status, responseText);
+        
+        if (response.ok) {
+          googleSheetsSuccess = true;
+        } else {
+          console.error('Google Sheets error:', response.status, responseText);
+        }
+      } else {
+        console.warn('GOOGLE_SHEET_WEBHOOK_URL not configured');
       }
     } catch (err) {
-      console.error('Error syncing to Google Sheets:', err.message);
+      console.error('Error syncing to Google Sheets:', err.message, err);
     }
 
     client.release();
@@ -100,7 +121,8 @@ export default async function handler(req, res) {
 
     res.json({
       success: true,
-      id
+      id,
+      googleSheetsSync: googleSheetsSuccess
     });
   } catch (err) {
     console.error('Database error:', err);

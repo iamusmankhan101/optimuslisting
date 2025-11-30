@@ -79,6 +79,60 @@ function AdminJobs() {
     setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
   }
 
+  const handleDeleteSelected = async () => {
+    if (selectedIds.length === 0) return
+    
+    const confirmed = window.confirm(`Are you sure you want to delete ${selectedIds.length} lead(s)? This action cannot be undone.`)
+    if (!confirmed) return
+
+    try {
+      const res = await fetch(`${API_BASE}/delete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds })
+      })
+      
+      const data = await res.json()
+      
+      if (data.success) {
+        alert(`Successfully deleted ${data.deleted} lead(s)`)
+        setSelectedIds([])
+        fetchData()
+      } else {
+        alert(`Error: ${data.error}`)
+      }
+    } catch (e) {
+      console.error(e)
+      alert('Failed to delete leads')
+    }
+  }
+
+  const handleDeleteSingle = async (id) => {
+    const confirmed = window.confirm('Are you sure you want to delete this lead? This action cannot be undone.')
+    if (!confirmed) return
+
+    try {
+      const res = await fetch(`${API_BASE}/delete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      })
+      
+      const data = await res.json()
+      
+      if (data.success) {
+        alert('Lead deleted successfully')
+        setSelected(null)
+        fetchData()
+      } else {
+        alert(`Error: ${data.error}`)
+      }
+    } catch (e) {
+      console.error(e)
+      alert('Failed to delete lead')
+    }
+  }
+
   return (
     <div className="admin-layout">
       <aside className="admin-sidebar">
@@ -119,6 +173,15 @@ function AdminJobs() {
                 <span className="tab active">Leads</span>
               </div>
               <div className="toolbar">
+                {selectedIds.length > 0 && (
+                  <button 
+                    className="btn danger" 
+                    onClick={handleDeleteSelected}
+                    style={{ marginRight: '10px' }}
+                  >
+                    Delete ({selectedIds.length})
+                  </button>
+                )}
                 <input
                   className="search"
                   type="text"
@@ -233,7 +296,16 @@ function AdminJobs() {
           <div className="modal" onClick={(e) => e.stopPropagation()} style={{ maxHeight: '90vh', overflowY: 'auto', maxWidth: '800px' }}>
             <header>
               <strong>{(selected.property_code || 'Property') + ' • ' + (selected.sub_category || 'Details')}</strong>
-              <button className="btn" onClick={() => setSelected(null)}>✕</button>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button 
+                  className="btn danger" 
+                  onClick={() => handleDeleteSingle(selected.id)}
+                  style={{ background: '#dc3545' }}
+                >
+                  Delete
+                </button>
+                <button className="btn" onClick={() => setSelected(null)}>✕</button>
+              </div>
             </header>
             <div className="body">
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>

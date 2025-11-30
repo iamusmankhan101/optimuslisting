@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "setup-db": "node setup-database.js",
-    "test-db": "node test-api.js"
+    "test-db": "node test-api.js",
+    "test-sheets": "node test-google-sheets.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.9.5",
