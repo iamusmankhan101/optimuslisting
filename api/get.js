@@ -1,4 +1,6 @@
-export default function handler(req, res) {
+import { Pool } from '@neondatabase/serverless';
+
+export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -16,36 +18,33 @@ export default function handler(req, res) {
 
   const { search, sortBy = 'created_at', order = 'DESC' } = req.query;
 
-  // Initialize global listings if not exists
-  if (!global.listings) {
-    global.listings = [];
+  try {
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const client = await pool.connect();
+
+    let query = 'SELECT * FROM property_listings';
+    const params = [];
+
+    if (search) {
+      const searchTerm = `%${search}%`;
+      query += ` WHERE property_code ILIKE $1 OR emirate ILIKE $1 OR area_community ILIKE $1 
+                 OR building_name ILIKE $1 OR agent_name ILIKE $1 OR email ILIKE $1`;
+      params.push(searchTerm);
+    }
+
+    const allowedSort = ['id', 'email', 'created_at', 'emirate', 'property_code'];
+    const sortField = allowedSort.includes(sortBy) ? sortBy : 'created_at';
+    const sortOrder = order.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+
+    query += ` ORDER BY ${sortField} ${sortOrder}`;
+
+    const result = await client.query(query, params);
+    client.release();
+    pool.end();
+
+    res.json({ success: true, data: result.rows });
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Failed to fetch listings' });
   }
-
-  let results = [...global.listings];
-
-  // Search filter
-  if (search) {
-    const searchLower = search.toLowerCase();
-    results = results.filter(item =>
-      (item.property_code && item.property_code.toLowerCase().includes(searchLower)) ||
-      (item.emirate && item.emirate.toLowerCase().includes(searchLower)) ||
-      (item.area_community && item.area_community.toLowerCase().includes(searchLower)) ||
-      (item.building_name && item.building_name.toLowerCase().includes(searchLower)) ||
-      (item.agent_name && item.agent_name.toLowerCase().includes(searchLower)) ||
-      (item.email && item.email.toLowerCase().includes(searchLower))
-    );
-  }
-
-  // Sorting
-  const allowedSort = ['id', 'name', 'email', 'created_at'];
-  const sortField = allowedSort.includes(sortBy) ? sortBy : 'created_at';
-  const sortOrder = order.toUpperCase() === 'ASC' ? 1 : -1;
-
-  results.sort((a, b) => {
-    const aVal = a[sortField] || '';
-    const bVal = b[sortField] || '';
-    return aVal < bVal ? -sortOrder : aVal > bVal ? sortOrder : 0;
-  });
-
-  res.json({ success: true, data: results });
 }
