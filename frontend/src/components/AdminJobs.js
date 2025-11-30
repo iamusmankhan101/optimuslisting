@@ -240,7 +240,7 @@ function AdminJobs() {
                       <th>Lead</th>
                       <th>Property Details</th>
                       <th>Agent</th>
-                      <th>Tags</th>
+                      <th>Status</th>
                       <th>Submitted</th>
                     </tr>
                   </thead>
@@ -284,9 +284,9 @@ function AdminJobs() {
                           </td>
                           <td className="truncate">{row.agent_name || 'Unknown'}</td>
                           <td>
-                            <span className="badge purple">{row.purpose || 'Full-time'}</span>
-                            <span className="badge blue">Fully remote</span>
-                            <span className="badge green">+4</span>
+                            <span className="badge purple">{row.purpose || 'N/A'}</span>
+                            {row.keys_status && <span className="badge blue">{row.keys_status}</span>}
+                            {row.viewing_status && <span className="badge green">{row.viewing_status}</span>}
                           </td>
                           <td className="nowrap">{row.created_at ? new Date(row.created_at).toLocaleDateString() : '-'}</td>
                         </tr>

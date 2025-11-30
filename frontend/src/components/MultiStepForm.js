@@ -38,12 +38,16 @@ function MultiStepForm() {
         keys_status: '',
         viewing_status: '',
         more_information: '',
+        property_images: '',
+        documents: '',
         agent_code: '',
         agent_name: '',
         agent_mobile: '',
         agent_email: '',
         agent_agency: ''
     });
+    const [propertyImages, setPropertyImages] = useState([]);
+    const [documents, setDocuments] = useState([]);
     const [status, setStatus] = useState({ type: '', message: '' });
     const [loading, setLoading] = useState(false);
 
@@ -292,6 +296,58 @@ function MultiStepForm() {
                             <div className="form-group">
                                 <label>More Information About Property</label>
                                 <textarea name="more_information" rows="3" value={formData.more_information} onChange={handleChange} placeholder="Enter additional property details" />
+                            </div>
+                            <div className="form-group">
+                                <label>Upload Property Images</label>
+                                <input 
+                                    type="file" 
+                                    accept="image/*,.pdf" 
+                                    multiple 
+                                    onChange={(e) => {
+                                        const files = Array.from(e.target.files).slice(0, 10);
+                                        setPropertyImages(files);
+                                        setFormData({...formData, property_images: files.map(f => f.name).join(', ')});
+                                    }}
+                                />
+                                <small style={{display: 'block', marginTop: '5px', color: '#666'}}>
+                                    Upload up to 10 supported files: PDF, document, or image. Max 10 MB per file.
+                                </small>
+                                {propertyImages.length > 0 && (
+                                    <div style={{marginTop: '10px'}}>
+                                        <strong>Selected files ({propertyImages.length}):</strong>
+                                        <ul style={{marginTop: '5px', paddingLeft: '20px'}}>
+                                            {propertyImages.map((file, idx) => (
+                                                <li key={idx}>{file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="form-group">
+                                <label>Add Documents / More Pictures</label>
+                                <input 
+                                    type="file" 
+                                    accept="image/*,.pdf,.doc,.docx" 
+                                    multiple 
+                                    onChange={(e) => {
+                                        const files = Array.from(e.target.files).slice(0, 10);
+                                        setDocuments(files);
+                                        setFormData({...formData, documents: files.map(f => f.name).join(', ')});
+                                    }}
+                                />
+                                <small style={{display: 'block', marginTop: '5px', color: '#666'}}>
+                                    Upload up to 10 supported files: PDF, document, or image. Max 10 MB per file.
+                                </small>
+                                {documents.length > 0 && (
+                                    <div style={{marginTop: '10px'}}>
+                                        <strong>Selected files ({documents.length}):</strong>
+                                        <ul style={{marginTop: '5px', paddingLeft: '20px'}}>
+                                            {documents.map((file, idx) => (
+                                                <li key={idx}>{file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </>

@@ -424,3 +424,43 @@
     font-size: 0.7rem;
   }
 }
+/* File
+ upload styling */
+input[type="file"] {
+    padding: 10px;
+    border: 2px dashed #ddd;
+    border-radius: 4px;
+    background: #f9f9f9;
+    cursor: pointer;
+    width: 100%;
+    font-size: 14px;
+}
+
+input[type="file"]:hover {
+    border-color: #007bff;
+    background: #f0f8ff;
+}
+
+input[type="file"]:focus {
+    outline: none;
+    border-color: #007bff;
+    background: #fff;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+    font-size: 12px;
+}
+
+.form-group ul {
+    margin-top: 5px;
+    padding-left: 20px;
+    font-size: 13px;
+    color: #555;
+}
+
+.form-group ul li {
+    margin: 3px 0;
+}
