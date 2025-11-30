@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './SubmissionsList.css';
 
 const API_BASE = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
@@ -13,7 +13,7 @@ function SubmissionsList() {
   const [order, setOrder] = useState('DESC');
   const [selectedListing, setSelectedListing] = useState(null);
 
-  const fetchSubmissions = async () => {
+  const fetchSubmissions = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({ search, sortBy, order });
@@ -28,11 +28,11 @@ function SubmissionsList() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [search, sortBy, order]);
 
   useEffect(() => {
     fetchSubmissions();
-  }, [search, sortBy, order]);
+  }, [fetchSubmissions]);
 
   const handleSort = (field) => {
     if (sortBy === field) {
