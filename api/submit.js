@@ -1,10 +1,3 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-let listings = [];
-let nextId = 1;
-
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -27,13 +20,19 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Email is required' });
   }
 
+  // Initialize global listings if not exists
+  if (!global.listings) {
+    global.listings = [];
+    global.nextId = 1;
+  }
+
   const listing = {
-    id: nextId++,
+    id: global.nextId++,
     ...data,
     created_at: new Date().toISOString()
   };
 
-  listings.push(listing);
+  global.listings.push(listing);
 
   // Send to Google Sheets
   try {

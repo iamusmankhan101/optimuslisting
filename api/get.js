@@ -1,5 +1,3 @@
-let listings = [];
-
 export default function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -18,7 +16,12 @@ export default function handler(req, res) {
 
   const { search, sortBy = 'created_at', order = 'DESC' } = req.query;
 
-  let results = [...listings];
+  // Initialize global listings if not exists
+  if (!global.listings) {
+    global.listings = [];
+  }
+
+  let results = [...global.listings];
 
   // Search filter
   if (search) {
