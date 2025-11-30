@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './SubmissionsList.css';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+  ? 'http://localhost:8000' 
+  : '/api';
 
 function SubmissionsList() {
   const [submissions, setSubmissions] = useState([]);

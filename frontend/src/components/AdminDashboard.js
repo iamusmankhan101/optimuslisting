@@ -2,7 +2,9 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { NavLink } from 'react-router-dom'
 import './AdminJobs.css'
 
-const API_BASE = 'http://localhost:8000'
+const API_BASE = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+  ? 'http://localhost:8000' 
+  : '/api';
 
 function AdminDashboard() {
   const [listings, setListings] = useState([])

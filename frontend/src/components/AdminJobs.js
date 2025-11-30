@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import './AdminJobs.css'
 
-const API_BASE = 'http://localhost:8000'
+const API_BASE = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+  ? 'http://localhost:8000' 
+  : '/api';
 
 function AdminJobs() {
   const [listings, setListings] = useState([])
