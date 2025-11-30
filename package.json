@@ -2,7 +2,13 @@
   "name": "optimuslisting",
   "version": "1.0.0",
   "description": "Property listing form application",
+  "type": "module",
+  "scripts": {
+    "setup-db": "node setup-database.js",
+    "test-db": "node test-api.js"
+  },
   "dependencies": {
-    "@neondatabase/serverless": "^0.9.0"
+    "@neondatabase/serverless": "^0.9.5",
+    "dotenv": "^16.6.1"
   }
 }

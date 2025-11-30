@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import Comments from './Comments'
 import './AdminJobs.css'
 
 const API_BASE = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
@@ -318,6 +319,10 @@ function AdminJobs() {
                   <div className="chip">Date: {selected.created_at ? new Date(selected.created_at).toLocaleString() : '-'}</div>
                   <div className="chip">ID: {selected.id || '-'}</div>
                 </div>
+              </div>
+
+              <div style={{ marginTop: '2rem', borderTop: '1px solid #e0e0e0', paddingTop: '1rem' }}>
+                <Comments propertyListingId={selected.id} />
               </div>
             </div>
           </div>

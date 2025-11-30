@@ -1,9 +1,7 @@
-CREATE DATABASE IF NOT EXISTS form_data;
-
-USE form_data;
+-- Neon PostgreSQL Schema for Property Listings
 
 CREATE TABLE IF NOT EXISTS property_listings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     
     -- Basic Info
     email VARCHAR(255) NOT NULL,
@@ -62,10 +60,16 @@ CREATE TABLE IF NOT EXISTS property_listings (
 
 -- Comments table for property listings
 CREATE TABLE IF NOT EXISTS comments (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    property_listing_id INT,
+    id SERIAL PRIMARY KEY,
+    property_listing_id INTEGER REFERENCES property_listings(id) ON DELETE CASCADE,
     comment TEXT NOT NULL,
     created_by VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (property_listing_id) REFERENCES property_listings(id) ON DELETE CASCADE
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Create indexes for better performance
+CREATE INDEX IF NOT EXISTS idx_property_listings_email ON property_listings(email);
+CREATE INDEX IF NOT EXISTS idx_property_listings_property_code ON property_listings(property_code);
+CREATE INDEX IF NOT EXISTS idx_property_listings_emirate ON property_listings(emirate);
+CREATE INDEX IF NOT EXISTS idx_property_listings_created_at ON property_listings(created_at);
+CREATE INDEX IF NOT EXISTS idx_comments_property_listing_id ON comments(property_listing_id);

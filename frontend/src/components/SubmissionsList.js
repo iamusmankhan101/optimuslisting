@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import Comments from './Comments';
 import './SubmissionsList.css';
 
 const API_BASE = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
@@ -198,6 +199,10 @@ function SubmissionsList() {
             <div className="detail-section">
               <p><strong>Submitted:</strong> {new Date(selectedListing.created_at).toLocaleString()}</p>
               <p><strong>Contact Email:</strong> {selectedListing.email}</p>
+            </div>
+
+            <div className="detail-section">
+              <Comments propertyListingId={selectedListing.id} />
             </div>
           </div>
         </div>

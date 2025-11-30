@@ -193,3 +193,16 @@ tr:hover {
 .detail-section a:hover {
   text-decoration: underline;
 }
+
+/* Comments section in modal */
+.detail-section .comments-container {
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  margin-top: 1rem;
+}
+
+.detail-section .comments-container h3 {
+  padding-right: 0;
+  margin-bottom: 1rem;
+}

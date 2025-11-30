@@ -1,21 +1,28 @@
 # Form Application
 
-A full-stack form application with React frontend and PHP backend.
+A full-stack form application with React frontend and serverless backend using Neon database.
 
 ## Setup Instructions
 
+### Database Setup (Neon)
+
+Follow the detailed guide in [NEON_SETUP.md](NEON_SETUP.md) to:
+1. Create a Neon account
+2. Create a database
+3. Get your connection string
+4. Set up the schema
+
 ### Backend Setup
 
-1. Import the database:
+1. Install dependencies:
    ```
-   mysql -u root -p < backend/setup.sql
+   npm install
    ```
 
-2. Update database credentials in `backend/config.php` if needed
-
-3. Place the `backend` folder in your web server directory (e.g., `htdocs` for XAMPP)
-
-4. Ensure your PHP server is running on `http://localhost`
+2. Update `backend/.env` with your Neon credentials:
+   ```
+   DATABASE_URL=postgresql://user:password@host/database
+   ```
 
 ### Frontend Setup
 

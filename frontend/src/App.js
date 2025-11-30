@@ -4,6 +4,7 @@ import MultiStepForm from './components/MultiStepForm';
 import SubmissionsList from './components/SubmissionsList';
 import AdminJobs from './components/AdminJobs';
 import AdminDashboard from './components/AdminDashboard';
+import Comments from './components/Comments';
 import './App.css';
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/leads" element={<AdminJobs />} />
             <Route path="/leads" element={<SubmissionsList />} />
+            <Route path="/comments" element={<Comments />} />
             <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
           </Routes>
         </main>
