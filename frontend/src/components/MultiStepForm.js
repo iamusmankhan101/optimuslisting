@@ -69,11 +69,72 @@ function MultiStepForm() {
         }
     };
 
+    // Helper function to convert file to base64
+    const fileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const base64 = reader.result.split(',')[1];
+                resolve({
+                    name: file.name,
+                    data: base64,
+                    mimeType: file.type,
+                    size: file.size
+                });
+            };
+            reader.onerror = error => reject(error);
+        });
+    };
+
     const handleSubmit = async () => {
         setLoading(true);
         setStatus({ type: '', message: '' });
 
         try {
+            let driveUrls = { images: [], documents: [] };
+            
+            // Upload files to Google Drive if any
+            if (propertyImages.length > 0 || documents.length > 0) {
+                setStatus({ type: 'info', message: 'Uploading files to Google Drive...' });
+                
+                const driveUploadUrl = process.env.REACT_APP_GOOGLE_DRIVE_UPLOAD_URL || 
+                                      'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+                
+                // Convert files to base64
+                const imageFiles = await Promise.all(propertyImages.map(fileToBase64));
+                const documentFiles = await Promise.all(documents.map(fileToBase64));
+                
+                const driveResponse = await fetch(driveUploadUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        property_code: formData.property_code || 'NO_CODE',
+                        property_images: imageFiles,
+                        documents: documentFiles
+                    })
+                });
+                
+                const driveData = await driveResponse.json();
+                
+                if (driveData.success) {
+                    driveUrls = {
+                        folderUrl: driveData.folderUrl,
+                        images: driveData.files.filter(f => f.type === 'image').map(f => f.url),
+                        documents: driveData.files.filter(f => f.type === 'document').map(f => f.url)
+                    };
+                    
+                    // Update formData with Drive URLs
+                    formData.property_images = driveUrls.images.join(', ');
+                    formData.documents = driveUrls.documents.join(', ');
+                } else {
+                    console.warn('Google Drive upload failed:', driveData.error);
+                    // Continue with submission even if Drive upload fails
+                }
+            }
+            
+            setStatus({ type: 'info', message: 'Submitting property listing...' });
+            
             const response = await fetch(`${API_BASE}/submit`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -87,7 +148,11 @@ function MultiStepForm() {
             const data = await response.json();
 
             if (data.success) {
-                setStatus({ type: 'success', message: 'Property listing submitted successfully!' });
+                let successMessage = 'Property listing submitted successfully!';
+                if (driveUrls.images.length > 0 || driveUrls.documents.length > 0) {
+                    successMessage += ` ${driveUrls.images.length + driveUrls.documents.length} files uploaded to Google Drive.`;
+                }
+                setStatus({ type: 'success', message: successMessage });
                 setFormData({
                     email: '',
                     source_of_listing: '',
@@ -118,12 +183,16 @@ function MultiStepForm() {
                     keys_status: '',
                     viewing_status: '',
                     more_information: '',
+                    property_images: '',
+                    documents: '',
                     agent_code: '',
                     agent_name: '',
                     agent_mobile: '',
                     agent_email: '',
                     agent_agency: ''
                 });
+                setPropertyImages([]);
+                setDocuments([]);
                 setCurrentStep(1);
             } else {
                 setStatus({ type: 'error', message: data.error || 'Submission failed' });
