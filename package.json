@@ -6,7 +6,8 @@
   "scripts": {
     "setup-db": "node setup-database.js",
     "test-db": "node test-api.js",
-    "test-sheets": "node test-google-sheets.js"
+    "test-sheets": "node test-google-sheets.js",
+    "test-drive": "node test-drive-upload.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.9.5",

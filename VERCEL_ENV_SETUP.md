@@ -21,7 +21,7 @@ Environment: Production, Preview, Development
 ### 3. Google Drive Upload (Optional)
 ```
 Name: REACT_APP_GOOGLE_DRIVE_UPLOAD_URL
-Value: https://script.google.com/macros/s/AKfycbwlkvibEriliFWwgqULUxuTN5t3Dgp8q6DlAcw6X2QIwj6NGPUH0f8MDtQCiILiWIR5gQ/exec
+Value: https://script.google.com/macros/s/AKfycbz1hVb5sNOs-uVO3Y3HLCn0BR3dXTZukOMrWPmS0Xxud9KfxxTVhBWXuR3eVzUoN_gMAw/exec
 Environment: Production, Preview, Development
 ```
 
