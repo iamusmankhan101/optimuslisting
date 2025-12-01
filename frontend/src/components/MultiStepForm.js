@@ -307,8 +307,10 @@ function MultiStepForm() {
                                         <label>Unit Status <span className="required">*</span></label>
                                         <select name="unit_status" value={formData.unit_status} onChange={handleChange}>
                                             <option value="">Select status</option>
+                                            <option value="Owner Occupied">Owner Occupied</option>
                                             <option value="Vacant">Vacant</option>
-                                            <option value="Occupied">Occupied</option>
+                                            <option value="Rented">Rented</option>
+                                            <option value="Vacant on Transfer">Vacant on Transfer</option>
                                         </select>
                                     </div>
                                 </div>
@@ -319,12 +321,20 @@ function MultiStepForm() {
                                     </div>
                                     <div className="form-group">
                                         <label>Notice Given</label>
-                                        <input type="text" name="notice_given" value={formData.notice_given} onChange={handleChange} placeholder="Enter notice period" />
+                                        <select name="notice_given" value={formData.notice_given} onChange={handleChange}>
+                                            <option value="">Select option</option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div className="form-group">
-                                    <label>Agent Commission (%)</label>
-                                    <input type="text" name="sales_agent_commission" value={formData.sales_agent_commission} onChange={handleChange} placeholder="Enter commission percentage" />
+                                    <label>Agent Commission</label>
+                                    <select name="sales_agent_commission" value={formData.sales_agent_commission} onChange={handleChange}>
+                                        <option value="">Select option</option>
+                                        <option value="Covered">Covered</option>
+                                        <option value="Not Covered">Not Covered</option>
+                                    </select>
                                 </div>
                             </div>
                         )}
