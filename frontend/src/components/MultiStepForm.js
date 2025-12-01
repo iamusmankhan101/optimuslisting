@@ -627,7 +627,19 @@ function MultiStepForm() {
 
 
             <div className="main-content">
-                <h1 className="page-title">Property Listing</h1>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <h1 className="page-title">Property Listing</h1>
+                    <a href="/buyer" style={{ 
+                        padding: '10px 20px', 
+                        backgroundColor: '#007bff', 
+                        color: 'white', 
+                        textDecoration: 'none', 
+                        borderRadius: '5px',
+                        fontSize: '14px'
+                    }}>
+                        Looking to Buy/Rent? Click Here
+                    </a>
+                </div>
 
                 <div className="stepper-container">
                     <div className="stepper-line">

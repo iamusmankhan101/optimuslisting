@@ -34,7 +34,8 @@ function AdminDashboard() {
         </div>
         <nav className="nav">
           <NavLink to="/admin/dashboard" className={({isActive}) => `link${isActive ? ' active' : ''}`}>Dashboard</NavLink>
-          <NavLink to="/admin/leads" className={({isActive}) => `link${isActive ? ' active' : ''}`}>Leads</NavLink>
+          <NavLink to="/admin/leads" className={({isActive}) => `link${isActive ? ' active' : ''}`}>Property Leads</NavLink>
+          <NavLink to="/admin/buyers" className={({isActive}) => `link${isActive ? ' active' : ''}`}>Buyer Requirements</NavLink>
         </nav>
       </aside>
 

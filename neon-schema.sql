@@ -73,3 +73,52 @@ CREATE INDEX IF NOT EXISTS idx_property_listings_property_code ON property_listi
 CREATE INDEX IF NOT EXISTS idx_property_listings_emirate ON property_listings(emirate);
 CREATE INDEX IF NOT EXISTS idx_property_listings_created_at ON property_listings(created_at);
 CREATE INDEX IF NOT EXISTS idx_comments_property_listing_id ON comments(property_listing_id);
+
+-- Buyer Requirements table
+CREATE TABLE IF NOT EXISTS buyer_requirements (
+    id SERIAL PRIMARY KEY,
+    
+    -- Contact Information
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(50) NOT NULL,
+    
+    -- Property Type
+    purpose VARCHAR(50) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    sub_category VARCHAR(100) NOT NULL,
+    
+    -- Location Preferences
+    emirate VARCHAR(100) NOT NULL,
+    preferred_areas TEXT,
+    
+    -- Property Specifications
+    bedrooms VARCHAR(50) NOT NULL,
+    bathrooms VARCHAR(50) NOT NULL,
+    min_size_sqft VARCHAR(50),
+    max_size_sqft VARCHAR(50),
+    maid_room VARCHAR(50),
+    furnishing VARCHAR(100),
+    
+    -- Budget
+    min_budget VARCHAR(100) NOT NULL,
+    max_budget VARCHAR(100) NOT NULL,
+    payment_method VARCHAR(100),
+    move_in_date DATE,
+    
+    -- Additional Information
+    additional_requirements TEXT,
+    
+    -- Status tracking
+    status VARCHAR(50) DEFAULT 'New',
+    assigned_to VARCHAR(255),
+    
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create indexes for buyer requirements
+CREATE INDEX IF NOT EXISTS idx_buyer_requirements_email ON buyer_requirements(email);
+CREATE INDEX IF NOT EXISTS idx_buyer_requirements_emirate ON buyer_requirements(emirate);
+CREATE INDEX IF NOT EXISTS idx_buyer_requirements_status ON buyer_requirements(status);
+CREATE INDEX IF NOT EXISTS idx_buyer_requirements_created_at ON buyer_requirements(created_at);

@@ -142,7 +142,8 @@ function AdminJobs() {
         </div>
         <nav className="nav">
           <a href="/admin/dashboard" className="link">Dashboard</a>
-          <a href="/admin/leads" className="link active">Leads</a>
+          <a href="/admin/leads" className="link active">Property Leads</a>
+          <a href="/admin/buyers" className="link">Buyer Requirements</a>
         </nav>
       </aside>
 
