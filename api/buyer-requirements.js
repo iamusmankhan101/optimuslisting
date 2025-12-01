@@ -56,7 +56,6 @@ module.exports = async (req, res) => {
             min_budget,
             max_budget,
             payment_method,
-            move_in_date,
             additional_requirements
         } = req.body;
 
@@ -74,13 +73,13 @@ module.exports = async (req, res) => {
                 name, email, phone, purpose, category, sub_category, 
                 emirate, preferred_areas, bedrooms, bathrooms, 
                 min_size_sqft, max_size_sqft, maid_room, furnishing,
-                min_budget, max_budget, payment_method, move_in_date, 
+                min_budget, max_budget, payment_method, 
                 additional_requirements, created_at
             ) VALUES (
                 ${name}, ${email}, ${phone}, ${purpose}, ${category}, ${sub_category},
                 ${emirate}, ${preferred_areas}, ${bedrooms}, ${bathrooms},
                 ${min_size_sqft}, ${max_size_sqft}, ${maid_room}, ${furnishing},
-                ${min_budget}, ${max_budget}, ${payment_method}, ${move_in_date},
+                ${min_budget}, ${max_budget}, ${payment_method},
                 ${additional_requirements}, NOW()
             )
             RETURNING id
