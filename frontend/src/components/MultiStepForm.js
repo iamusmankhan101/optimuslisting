@@ -412,11 +412,11 @@ function MultiStepForm() {
                     </>
                 );
 
-            case 3:
+            case 4:
                 return (
                     <>
                         <div className="form-section">
-                            <div className="form-section-title">Property Identification :</div>
+                            <div className="form-section-title">Property Specifications :</div>
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Bedrooms <span className="required">*</span></label>
