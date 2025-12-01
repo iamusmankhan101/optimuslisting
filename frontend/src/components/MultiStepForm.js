@@ -70,6 +70,12 @@ function MultiStepForm() {
         }
     };
 
+    const prevStep = () => {
+        if (currentStep > 1) {
+            setCurrentStep(currentStep - 1);
+        }
+    };
+
     // Helper function to convert file to base64
     const fileToBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -638,6 +644,11 @@ function MultiStepForm() {
                     )}
 
                     <div className="form-actions">
+                        {currentStep > 1 && (
+                            <button className="back-btn" onClick={prevStep}>
+                                ← Back
+                            </button>
+                        )}
                         {currentStep < steps.length ? (
                             <button className="next-btn" onClick={nextStep}>
                                 Continue →
