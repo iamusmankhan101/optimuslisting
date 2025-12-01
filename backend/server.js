@@ -89,6 +89,96 @@ app.post('/submit', async (req, res) => {
   });
 });
 
+// Buyer requirements storage
+let buyerRequirements = [];
+let nextBuyerId = 1;
+
+// POST endpoint - submit buyer requirements
+app.post('/buyer-requirements', (req, res) => {
+  const data = req.body;
+  
+  if (!data || !data.email || !data.name || !data.phone) {
+    return res.status(400).json({ success: false, error: 'Missing required fields' });
+  }
+  
+  const requirement = {
+    id: nextBuyerId++,
+    ...data,
+    created_at: new Date().toISOString()
+  };
+  
+  buyerRequirements.push(requirement);
+  
+  res.json({
+    success: true,
+    id: requirement.id,
+    message: 'Buyer requirements submitted successfully'
+  });
+});
+
+// GET endpoint - retrieve buyer requirements
+app.get('/buyer-requirements', (req, res) => {
+  res.json({ success: true, requirements: buyerRequirements });
+});
+
+// POST endpoint - match properties based on buyer requirements
+app.post('/match-properties', (req, res) => {
+  const { purpose, emirate, bedrooms, bathrooms, min_budget, max_budget } = req.body;
+  
+  let matches = [...listings];
+  
+  // Filter by emirate
+  if (emirate) {
+    matches = matches.filter(p => p.emirate === emirate);
+  }
+  
+  // Filter by purpose
+  if (purpose) {
+    matches = matches.filter(p => p.purpose === purpose || p.purpose === 'Both');
+  }
+  
+  // Filter by bedrooms (exact or higher)
+  if (bedrooms && bedrooms !== 'Studio') {
+    matches = matches.filter(p => {
+      if (p.bedrooms === bedrooms || p.bedrooms === bedrooms + '+') return true;
+      const pBed = parseInt(p.bedrooms);
+      const reqBed = parseInt(bedrooms);
+      return !isNaN(pBed) && !isNaN(reqBed) && pBed >= reqBed;
+    });
+  } else if (bedrooms === 'Studio') {
+    matches = matches.filter(p => p.bedrooms === 'Studio');
+  }
+  
+  // Filter by bathrooms (exact or higher)
+  if (bathrooms) {
+    matches = matches.filter(p => {
+      if (p.bathrooms === bathrooms || p.bathrooms === bathrooms + '+') return true;
+      const pBath = parseInt(p.bathrooms);
+      const reqBath = parseInt(bathrooms);
+      return !isNaN(pBath) && !isNaN(reqBath) && pBath >= reqBath;
+    });
+  }
+  
+  // Filter by budget
+  if (min_budget && max_budget) {
+    matches = matches.filter(p => {
+      let price = 0;
+      if (purpose === 'Buy' && p.sale_price) {
+        price = parseInt(p.sale_price.replace(/[^0-9]/g, ''));
+      } else if (purpose === 'Rent' && p.asking_rent) {
+        price = parseInt(p.asking_rent.replace(/[^0-9]/g, ''));
+      }
+      return price >= parseInt(min_budget) && price <= parseInt(max_budget);
+    });
+  }
+  
+  res.json({
+    success: true,
+    matches: matches,
+    count: matches.length
+  });
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
