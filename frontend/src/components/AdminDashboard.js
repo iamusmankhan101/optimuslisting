@@ -9,6 +9,7 @@ const API_BASE = typeof window !== 'undefined' && window.location.hostname === '
 function AdminDashboard() {
   const [listings, setListings] = useState([])
   const [loading, setLoading] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const fetchData = useCallback(async () => {
     setLoading(true)
@@ -27,7 +28,7 @@ function AdminDashboard() {
 
   return (
     <div className="admin-layout">
-      <aside className="admin-sidebar">
+      <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="brand">
           <img src="/images/Logo-v1-white-background-1-2-2048x624-1-1-1024x312.webp" alt="Optimus" />
         </div>
@@ -37,8 +38,11 @@ function AdminDashboard() {
         </nav>
       </aside>
 
+      {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
+
       <div className="admin-content">
         <div className="admin-topbar">
+          <button className="mobile-menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>☰</button>
           <div>
             <div className="title">Dashboard</div>
             <div className="subtitle">Overview of your leads</div>
