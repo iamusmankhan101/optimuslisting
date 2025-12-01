@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './MultiStepForm.css';
+import MatchingProperties from './MatchingProperties';
 
 const API_BASE = process.env.REACT_APP_API_URL || 
   (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
@@ -8,6 +9,8 @@ const API_BASE = process.env.REACT_APP_API_URL ||
 
 function BuyerForm() {
     const [currentStep, setCurrentStep] = useState(1);
+    const [showResults, setShowResults] = useState(false);
+    const [matchingProperties, setMatchingProperties] = useState([]);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -60,6 +63,7 @@ function BuyerForm() {
         setStatus({ type: '', message: '' });
 
         try {
+            // Submit buyer requirements
             const response = await fetch(`${API_BASE}/buyer-requirements`, {
                 method: 'POST',
                 headers: { 
@@ -76,28 +80,28 @@ function BuyerForm() {
             const data = await response.json();
 
             if (data.success) {
-                setStatus({ type: 'success', message: 'Requirements submitted successfully! We will contact you soon.' });
-                setFormData({
-                    name: '',
-                    email: '',
-                    phone: '',
-                    purpose: '',
-                    category: '',
-                    sub_category: '',
-                    emirate: '',
-                    preferred_areas: '',
-                    bedrooms: '',
-                    bathrooms: '',
-                    min_size_sqft: '',
-                    max_size_sqft: '',
-                    maid_room: '',
-                    furnishing: '',
-                    min_budget: '',
-                    max_budget: '',
-                    payment_method: '',
-                    additional_requirements: ''
+                // Fetch matching properties
+                setStatus({ type: 'info', message: 'Finding matching properties...' });
+                
+                const matchResponse = await fetch(`${API_BASE}/match-properties`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
                 });
-                setCurrentStep(1);
+
+                if (matchResponse.ok) {
+                    const matchData = await matchResponse.json();
+                    if (matchData.success) {
+                        setMatchingProperties(matchData.matches);
+                        setShowResults(true);
+                    }
+                } else {
+                    // Even if matching fails, show success message
+                    setStatus({ type: 'success', message: 'Requirements submitted successfully!' });
+                }
             } else {
                 setStatus({ type: 'error', message: data.error || 'Submission failed' });
             }
@@ -106,6 +110,33 @@ function BuyerForm() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleBackToForm = () => {
+        setShowResults(false);
+        setMatchingProperties([]);
+        setFormData({
+            name: '',
+            email: '',
+            phone: '',
+            purpose: '',
+            category: '',
+            sub_category: '',
+            emirate: '',
+            preferred_areas: '',
+            bedrooms: '',
+            bathrooms: '',
+            min_size_sqft: '',
+            max_size_sqft: '',
+            maid_room: '',
+            furnishing: '',
+            min_budget: '',
+            max_budget: '',
+            payment_method: '',
+            additional_requirements: ''
+        });
+        setCurrentStep(1);
+        setStatus({ type: '', message: '' });
     };
 
     const renderStepContent = () => {
@@ -357,6 +388,17 @@ function BuyerForm() {
     };
 
     const progressWidth = ((currentStep - 1) / (steps.length - 1)) * 100;
+
+    // Show matching properties if available
+    if (showResults) {
+        return (
+            <MatchingProperties 
+                properties={matchingProperties} 
+                requirements={formData}
+                onBack={handleBackToForm}
+            />
+        );
+    }
 
     return (
         <div className="multistep-container">
