@@ -411,7 +411,14 @@ function BuyerForm() {
             <div className="main-content">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                     <h1 className="page-title">Property Requirements</h1>
-                    <a href="/" className="btn-secondary" style={{ textDecoration: 'none' }}>
+                    <a href="/" className="btn-secondary" style={{ 
+                        textDecoration: 'none',
+                        backgroundColor: '#0a4c7b',
+                        color: 'white',
+                        padding: '10px 20px',
+                        borderRadius: '5px',
+                        border: 'none'
+                    }}>
                         List Property Instead
                     </a>
                 </div>
