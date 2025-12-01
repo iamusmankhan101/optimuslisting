@@ -290,12 +290,14 @@ function MultiStepForm() {
                                 <label>Purpose <span className="required">*</span></label>
                                 <select name="purpose" value={formData.purpose} onChange={handleChange}>
                                     <option value="">Select purpose</option>
-                                    <option value="Sale">Sale</option>
                                     <option value="Rent">Rent</option>
+                                    <option value="Sale">Sale</option>
+                                    <option value="Both">Both</option>
+                                    <option value="Buy">Buy</option>
                                 </select>
                             </div>
                         </div>
-                        {formData.purpose === 'Sale' && (
+                        {(formData.purpose === 'Sale' || formData.purpose === 'Both') && (
                             <div className="form-section">
                                 <div className="form-section-title">Sales Details :</div>
                                 <div className="form-row">
@@ -338,7 +340,7 @@ function MultiStepForm() {
                                 </div>
                             </div>
                         )}
-                        {formData.purpose === 'Rent' && (
+                        {(formData.purpose === 'Rent' || formData.purpose === 'Both') && (
                             <div className="form-section">
                                 <div className="form-section-title">Rent Details :</div>
                                 <div className="form-row">
@@ -496,18 +498,21 @@ function MultiStepForm() {
                                     <label>Keys Status <span className="required">*</span></label>
                                     <select name="keys_status" value={formData.keys_status} onChange={handleChange}>
                                         <option value="">Select keys status</option>
-                                        <option value="Available">Available</option>
-                                        <option value="Not Available">Not Available</option>
+                                        <option value="With Agent">With Agent</option>
+                                        <option value="Opened">Opened</option>
+                                        <option value="At Reception">At Reception</option>
+                                        <option value="Under Matt">Under Matt</option>
                                         <option value="With Owner">With Owner</option>
                                     </select>
                                 </div>
                                 <div className="form-group">
                                     <label>Viewing Status <span className="required">*</span></label>
                                     <select name="viewing_status" value={formData.viewing_status} onChange={handleChange}>
-                                        <option value="">Select viewing status</option>
-                                        <option value="Easy to View">Easy to View</option>
-                                        <option value="Appointment Required">Appointment Required</option>
-                                        <option value="Difficult">Difficult</option>
+                                        <option value="">Choose</option>
+                                        <option value="Easy / Direct Access">Easy / Direct Access</option>
+                                        <option value="24 Hours- Notice">24 Hours- Notice</option>
+                                        <option value="Tenant Occupied">Tenant Occupied</option>
+                                        <option value="Vacant">Vacant</option>
                                     </select>
                                 </div>
                             </div>
