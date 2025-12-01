@@ -53,11 +53,11 @@ function MultiStepForm() {
     const [loading, setLoading] = useState(false);
 
     const steps = [
-        { number: 1, title: 'PROPERTY INFO', subtitle: 'Provide your property information' },
-        { number: 2, title: 'LOCATION', subtitle: 'Find the property location' },
-        { number: 3, title: 'SPECIFICATIONS', subtitle: 'Add property features' },
-        { number: 4, title: 'PRICING', subtitle: 'Set pricing details' },
-        { number: 5, title: 'AGENT DETAILS', subtitle: 'Provide agent information' }
+        { number: 1, title: 'PROPERTY INFO', subtitle: 'Basic information and source' },
+        { number: 2, title: 'PRICING', subtitle: 'Classification and pricing details' },
+        { number: 3, title: 'LOCATION', subtitle: 'Property location and identification' },
+        { number: 4, title: 'SPECIFICATIONS', subtitle: 'Features, viewing & file uploads' },
+        { number: 5, title: 'AGENT DETAILS', subtitle: 'Agent information' }
     ];
 
     const handleChange = (e) => {
@@ -262,6 +262,112 @@ function MultiStepForm() {
                 return (
                     <>
                         <div className="form-section">
+                            <div className="form-section-title">Property Classification :</div>
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label>Category <span className="required">*</span></label>
+                                    <select name="category" value={formData.category} onChange={handleChange}>
+                                        <option value="">Select category</option>
+                                        <option value="Residential">Residential</option>
+                                        <option value="Commercial">Commercial</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Sub Category <span className="required">*</span></label>
+                                    <select name="sub_category" value={formData.sub_category} onChange={handleChange}>
+                                        <option value="">Select sub category</option>
+                                        <option value="Apartment">Apartment</option>
+                                        <option value="Villa">Villa</option>
+                                        <option value="Townhouse">Townhouse</option>
+                                        <option value="Penthouse">Penthouse</option>
+                                        <option value="Office">Office</option>
+                                        <option value="Shop">Shop</option>
+                                        <option value="Warehouse">Warehouse</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <label>Purpose <span className="required">*</span></label>
+                                <select name="purpose" value={formData.purpose} onChange={handleChange}>
+                                    <option value="">Select purpose</option>
+                                    <option value="Sale">Sale</option>
+                                    <option value="Rent">Rent</option>
+                                </select>
+                            </div>
+                        </div>
+                        {formData.purpose === 'Sale' && (
+                            <div className="form-section">
+                                <div className="form-section-title">Sales Details :</div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>Sale Price (AED) <span className="required">*</span></label>
+                                        <input type="text" name="sale_price" value={formData.sale_price} onChange={handleChange} placeholder="Enter sale price" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Unit Status <span className="required">*</span></label>
+                                        <select name="unit_status" value={formData.unit_status} onChange={handleChange}>
+                                            <option value="">Select status</option>
+                                            <option value="Vacant">Vacant</option>
+                                            <option value="Occupied">Occupied</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>Rented Details</label>
+                                        <input type="text" name="rented_details" value={formData.rented_details} onChange={handleChange} placeholder="Enter rented details" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Notice Given</label>
+                                        <input type="text" name="notice_given" value={formData.notice_given} onChange={handleChange} placeholder="Enter notice period" />
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label>Agent Commission (%)</label>
+                                    <input type="text" name="sales_agent_commission" value={formData.sales_agent_commission} onChange={handleChange} placeholder="Enter commission percentage" />
+                                </div>
+                            </div>
+                        )}
+                        {formData.purpose === 'Rent' && (
+                            <div className="form-section">
+                                <div className="form-section-title">Rent Details :</div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>Asking Rent (AED) <span className="required">*</span></label>
+                                        <input type="text" name="asking_rent" value={formData.asking_rent} onChange={handleChange} placeholder="Enter asking rent" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Number of Cheques <span className="required">*</span></label>
+                                        <select name="number_of_chq" value={formData.number_of_chq} onChange={handleChange}>
+                                            <option value="">Select number of cheques</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="6">6</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>Security Deposit (AED)</label>
+                                        <input type="text" name="security_deposit" value={formData.security_deposit} onChange={handleChange} placeholder="Enter security deposit" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Agent Commission (%)</label>
+                                        <input type="text" name="rent_agent_commission" value={formData.rent_agent_commission} onChange={handleChange} placeholder="Enter commission percentage" />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </>
+                );
+
+            case 3:
+                return (
+                    <>
+                        <div className="form-section">
                             <div className="form-section-title">Property Identification :</div>
                             <div className="form-row">
                                 <div className="form-group">
@@ -310,7 +416,7 @@ function MultiStepForm() {
                 return (
                     <>
                         <div className="form-section">
-                            <div className="form-section-title">Property Specifications :</div>
+                            <div className="form-section-title">Property Identification :</div>
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Bedrooms <span className="required">*</span></label>
@@ -459,7 +565,7 @@ function MultiStepForm() {
                 return (
                     <>
                         <div className="form-section">
-                            <div className="form-section-title">Property Classification :</div>
+                            <div className="form-section-title">Property Specifications :</div>
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Category <span className="required">*</span></label>
