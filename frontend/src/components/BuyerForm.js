@@ -26,7 +26,6 @@ function BuyerForm() {
         min_budget: '',
         max_budget: '',
         payment_method: '',
-        move_in_date: '',
         additional_requirements: ''
     });
     const [status, setStatus] = useState({ type: '', message: '' });
@@ -96,7 +95,6 @@ function BuyerForm() {
                     min_budget: '',
                     max_budget: '',
                     payment_method: '',
-                    move_in_date: '',
                     additional_requirements: ''
                 });
                 setCurrentStep(1);
@@ -327,25 +325,14 @@ function BuyerForm() {
                                     />
                                 </div>
                             </div>
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <label>Payment Method</label>
-                                    <select name="payment_method" value={formData.payment_method} onChange={handleChange}>
-                                        <option value="">Select payment method</option>
-                                        <option value="Cash">Cash</option>
-                                        <option value="Mortgage">Mortgage</option>
-                                        <option value="Installment">Installment</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>Preferred Move-in Date</label>
-                                    <input 
-                                        type="date" 
-                                        name="move_in_date" 
-                                        value={formData.move_in_date} 
-                                        onChange={handleChange} 
-                                    />
-                                </div>
+                            <div className="form-group">
+                                <label>Payment Method</label>
+                                <select name="payment_method" value={formData.payment_method} onChange={handleChange}>
+                                    <option value="">Select payment method</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Mortgage">Mortgage</option>
+                                    <option value="Installment">Installment</option>
+                                </select>
                             </div>
                         </div>
                         <div className="form-section">
@@ -382,14 +369,7 @@ function BuyerForm() {
             <div className="main-content">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                     <h1 className="page-title">Property Requirements</h1>
-                    <a href="/" style={{ 
-                        padding: '10px 20px', 
-                        backgroundColor: '#6c757d', 
-                        color: 'white', 
-                        textDecoration: 'none', 
-                        borderRadius: '5px',
-                        fontSize: '14px'
-                    }}>
+                    <a href="/" className="btn-secondary" style={{ textDecoration: 'none' }}>
                         List Property Instead
                     </a>
                 </div>
