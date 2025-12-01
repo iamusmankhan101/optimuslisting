@@ -45,10 +45,10 @@ module.exports = async (req, res) => {
             if (bedrooms === 'Studio') {
                 query += " AND bedrooms = 'Studio'";
             } else if (bedrooms === '6+') {
-                query += " AND (bedrooms = '6+' OR CAST(bedrooms AS INTEGER) >= 6)";
+                query += " AND (bedrooms = '6+' OR (bedrooms ~ '^[0-9]+$' AND CAST(bedrooms AS INTEGER) >= 6))";
             } else {
-                // Match exact or higher
-                query += ' AND (bedrooms = $' + paramIndex + " OR bedrooms = '" + bedrooms + "+' OR CAST(bedrooms AS INTEGER) >= " + bedrooms + ')';
+                // Match exact or higher - only cast if it's a number
+                query += ' AND (bedrooms = $' + paramIndex + " OR bedrooms = '" + bedrooms + "+' OR (bedrooms ~ '^[0-9]+$' AND CAST(bedrooms AS INTEGER) >= " + bedrooms + '))';
                 params.push(bedrooms);
                 paramIndex++;
             }
@@ -57,10 +57,10 @@ module.exports = async (req, res) => {
         // PROPERTY SPECIFICATIONS - Bathrooms (Required)
         if (bathrooms) {
             if (bathrooms === '5+') {
-                query += " AND (bathrooms = '5+' OR CAST(bathrooms AS INTEGER) >= 5)";
+                query += " AND (bathrooms = '5+' OR (bathrooms ~ '^[0-9]+$' AND CAST(bathrooms AS INTEGER) >= 5))";
             } else {
-                // Match exact or higher
-                query += ' AND (bathrooms = $' + paramIndex + " OR bathrooms = '" + bathrooms + "+' OR CAST(bathrooms AS INTEGER) >= " + bathrooms + ')';
+                // Match exact or higher - only cast if it's a number
+                query += ' AND (bathrooms = $' + paramIndex + " OR bathrooms = '" + bathrooms + "+' OR (bathrooms ~ '^[0-9]+$' AND CAST(bathrooms AS INTEGER) >= " + bathrooms + '))';
                 params.push(bathrooms);
                 paramIndex++;
             }
