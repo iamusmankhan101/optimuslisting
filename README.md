@@ -1,6 +1,6 @@
-# Form Application
+# Property Listing Application
 
-A full-stack form application with React frontend and serverless backend using Neon database.
+A full-stack property listing management system with React frontend and serverless backend using Neon database.
 
 ## Setup Instructions
 
@@ -45,7 +45,7 @@ Follow the detailed guide in [NEON_SETUP.md](NEON_SETUP.md) to:
 
 ## Features
 
-- Comprehensive property listing form with 5 sections:
+- **Comprehensive Property Listing Form** with 5 sections:
   - Property Classification (Category, Sub Category, Purpose)
   - Property Identification (Location details, Google Pin)
   - Property Specifications (Bedrooms, Bathrooms, Size, Furnishing)

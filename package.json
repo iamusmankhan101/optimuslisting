@@ -1,7 +1,7 @@
 {
-  "name": "optimuslisting",
+  "name": "property-listing-app",
   "version": "1.0.0",
-  "description": "Property listing form application",
+  "description": "Property Listing Management System",
   "type": "module",
   "scripts": {
     "setup-db": "node setup-database.js",
