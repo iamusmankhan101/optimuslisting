@@ -22,17 +22,14 @@ function Form() {
         maid_room: '',
         furnishing: '',
         property_condition: '',
-        // Sale specific fields
         sale_price: '',
-        // Rent specific fields
-        asking_rent: '',
-        number_of_chq: '',
-        security_deposit: '',
-        // Common fields
         unit_status: '',
         rented_details: '',
         notice_given: '',
         sales_agent_commission: '',
+        asking_rent: '',
+        number_of_chq: '',
+        security_deposit: '',
         rent_agent_commission: '',
         keys_status: '',
         viewing_status: '',
@@ -43,10 +40,6 @@ function Form() {
         agent_email: '',
         agent_agency: ''
     });
-    
-    // Show/hide fields based on purpose
-    const isBuy = formData.purpose === 'Sale';
-    const isRent = formData.purpose === 'Rent';
     const [status, setStatus] = useState({ type: '', message: '' });
     const [loading, setLoading] = useState(false);
 
@@ -135,16 +128,10 @@ function Form() {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="purpose">4. Purpose <span className="required">*</span></label>
-                    <select 
-                        id="purpose" 
-                        name="purpose" 
-                        value={formData.purpose} 
-                        onChange={handleChange}
-                        required
-                    >
+                    <label htmlFor="purpose">4. Purpose</label>
+                    <select id="purpose" name="purpose" value={formData.purpose} onChange={handleChange}>
                         <option value="">Select Purpose</option>
-                        <option value="Sale">Buy</option>
+                        <option value="Sale">Sale</option>
                         <option value="Rent">Rent</option>
                     </select>
                 </div>
@@ -262,19 +249,10 @@ function Form() {
                 <div className="section-header">Sales Details</div>
 
                 <div className="form-row">
-                    {isBuy && (
                     <div className="form-group">
-                        <label htmlFor="sale_price">Sale Price (AED) <span className="required">*</span></label>
-                        <input 
-                            type="number" 
-                            id="sale_price" 
-                            name="sale_price" 
-                            value={formData.sale_price} 
-                            onChange={handleChange} 
-                            required={isBuy}
-                        />
+                        <label htmlFor="sale_price">17. Sale Price</label>
+                        <input type="text" id="sale_price" name="sale_price" value={formData.sale_price} onChange={handleChange} placeholder="AED" />
                     </div>
-                )}
 
                     <div className="form-group">
                         <label htmlFor="unit_status">18. Unit Status</label>
@@ -297,79 +275,44 @@ function Form() {
                         <input type="text" id="notice_given" name="notice_given" value={formData.notice_given} onChange={handleChange} />
                     </div>
 
-                    {isBuy && (
                     <div className="form-group">
-                        <label htmlFor="sales_agent_commission">Sales Agent Commission (%)</label>
-                        <input 
-                            type="number" 
-                            id="sales_agent_commission" 
-                            name="sales_agent_commission" 
-                            value={formData.sales_agent_commission} 
-                            onChange={handleChange} 
-                        />
+                        <label htmlFor="sales_agent_commission">21. Agent Commission</label>
+                        <input type="text" id="sales_agent_commission" name="sales_agent_commission" value={formData.sales_agent_commission} onChange={handleChange} placeholder="%" />
                     </div>
-                )}
                 </div>
 
                 <div className="section-header">Rent Details</div>
 
                 <div className="form-row">
-                    {isRent && (
                     <div className="form-group">
-                        <label htmlFor="asking_rent">Asking Rent (AED) <span className="required">*</span></label>
-                        <input 
-                            type="number" 
-                            id="asking_rent" 
-                            name="asking_rent" 
-                            value={formData.asking_rent} 
-                            onChange={handleChange} 
-                            required={isRent}
-                        />
+                        <label htmlFor="asking_rent">22. Asking Rent</label>
+                        <input type="text" id="asking_rent" name="asking_rent" value={formData.asking_rent} onChange={handleChange} placeholder="AED" />
                     </div>
-                )}
 
-                    {isRent && (
                     <div className="form-group">
-                        <label htmlFor="number_of_chq">Number of Cheques <span className="required">*</span></label>
-                        <input 
-                            type="number" 
-                            id="number_of_chq" 
-                            name="number_of_chq" 
-                            value={formData.number_of_chq} 
-                            onChange={handleChange} 
-                            required={isRent}
-                        />
+                        <label htmlFor="number_of_chq">23. Number of Chq</label>
+                        <select id="number_of_chq" name="number_of_chq" value={formData.number_of_chq} onChange={handleChange}>
+                            <option value="">Select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="6">6</option>
+                            <option value="12">12</option>
+                        </select>
                     </div>
-                )}
                 </div>
 
                 <div className="form-row">
-                    {isRent && (
                     <div className="form-group">
-                        <label htmlFor="security_deposit">Security Deposit (AED) <span className="required">*</span></label>
-                        <input 
-                            type="number" 
-                            id="security_deposit" 
-                            name="security_deposit" 
-                            value={formData.security_deposit} 
-                            onChange={handleChange} 
-                            required={isRent}
-                        />
+                        <label htmlFor="security_deposit">24. Security Deposit</label>
+                        <input type="text" id="security_deposit" name="security_deposit" value={formData.security_deposit} onChange={handleChange} placeholder="AED" />
                     </div>
-                )}
 
-                    {isRent && (
                     <div className="form-group">
-                        <label htmlFor="rent_agent_commission">Rent Agent Commission (%)</label>
-                        <input 
-                            type="number" 
-                            id="rent_agent_commission" 
-                            name="rent_agent_commission" 
-                            value={formData.rent_agent_commission} 
-                            onChange={handleChange} 
-                        />
+                        <label htmlFor="rent_agent_commission">25. Agent Commission</label>
+                        <input type="text" id="rent_agent_commission" name="rent_agent_commission" value={formData.rent_agent_commission} onChange={handleChange} placeholder="%" />
                     </div>
-                )}
                 </div>
 
                 <div className="section-header">🔹 Section 4 — Viewing & Status</div>
