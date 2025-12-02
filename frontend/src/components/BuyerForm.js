@@ -82,9 +82,37 @@ function BuyerForm() {
             const data = await response.json();
 
             if (data.success) {
-                setStatus({ type: 'success', message: 'Requirements submitted successfully! We will contact you soon with matching properties.' });
+                // Save formData before resetting
+                const savedFormData = { ...formData };
                 
-                // Reset form
+                setStatus({ type: 'info', message: 'Finding matching properties...' });
+                
+                // Try to fetch matching properties
+                try {
+                    const matchResponse = await fetch(`${API_BASE}/match-properties`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(savedFormData)
+                    });
+
+                    if (matchResponse.ok) {
+                        const matchData = await matchResponse.json();
+                        if (matchData.success) {
+                            setMatchingProperties(matchData.matches || []);
+                            setShowResults(true);
+                            // Don't reset form yet - user will see results first
+                            return;
+                        }
+                    }
+                } catch (matchError) {
+                    console.log('Property matching error:', matchError);
+                }
+                
+                // If matching failed or no matches, show success and reset
+                setStatus({ type: 'success', message: 'Requirements submitted successfully! We will contact you soon.' });
                 setFormData({
                     name: '',
                     email: '',
@@ -106,29 +134,6 @@ function BuyerForm() {
                     additional_requirements: ''
                 });
                 setCurrentStep(1);
-                
-                // Optional: Try to fetch matching properties but don't block on failure
-                try {
-                    const matchResponse = await fetch(`${API_BASE}/match-properties`, {
-                        method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify(formData)
-                    });
-
-                    if (matchResponse.ok) {
-                        const matchData = await matchResponse.json();
-                        if (matchData.success && matchData.matches && matchData.matches.length > 0) {
-                            setMatchingProperties(matchData.matches);
-                            setShowResults(true);
-                        }
-                    }
-                } catch (matchError) {
-                    console.log('Property matching not available:', matchError);
-                    // Ignore matching errors - form submission was successful
-                }
             } else {
                 setStatus({ type: 'error', message: data.error || 'Submission failed' });
             }
