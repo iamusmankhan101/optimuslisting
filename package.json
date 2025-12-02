@@ -2,7 +2,6 @@
   "name": "property-listing-app",
   "version": "1.0.0",
   "description": "Property Listing Management System",
-  "type": "module",
   "scripts": {
     "setup-db": "node setup-database.js",
     "test-db": "node test-api.js",
