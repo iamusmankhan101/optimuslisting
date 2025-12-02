@@ -3,9 +3,15 @@
 
 function doPost(e) {
   try {
+    Logger.log('Received POST request');
+    Logger.log('Post data: ' + e.postData.contents);
+    
     const data = JSON.parse(e.postData.contents);
     const sheetName = data.sheet || 'PropertyListings';
     const rowData = data.data;
+    
+    Logger.log('Sheet name: ' + sheetName);
+    Logger.log('Row data: ' + JSON.stringify(rowData));
     
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     let sheet = ss.getSheetByName(sheetName);

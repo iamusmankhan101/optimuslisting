@@ -87,10 +87,38 @@ export default async function handler(req, res) {
       const googleSheetWebhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
       if (googleSheetWebhookUrl) {
         console.log('Sending to Google Sheets...');
-        const sheetData = { 
-          ...data, 
-          id, 
-          created_at: new Date().toISOString() 
+        
+        // Format data for Google Sheets script
+        const googleSheetsPayload = {
+          sheet: 'PropertyListings',
+          data: {
+            id,
+            email: data.email,
+            source_of_listing: data.source_of_listing,
+            category: data.category,
+            sub_category: data.sub_category,
+            purpose: data.purpose,
+            property_code: data.property_code,
+            emirate: data.emirate,
+            area_community: data.area_community,
+            building_name: data.building_name,
+            unit_number: data.unit_number,
+            bedrooms: data.bedrooms,
+            bathrooms: data.bathrooms,
+            size_sqft: data.size_sqft,
+            maid_room: data.maid_room,
+            furnishing: data.furnishing,
+            property_condition: data.property_condition,
+            sale_price: data.sale_price,
+            unit_status: data.unit_status,
+            asking_rent: data.asking_rent,
+            number_of_chq: data.number_of_chq,
+            keys_status: data.keys_status,
+            viewing_status: data.viewing_status,
+            agent_name: data.agent_name,
+            agent_mobile: data.agent_mobile,
+            agent_email: data.agent_email
+          }
         };
         
         const response = await fetch(googleSheetWebhookUrl, {
@@ -98,13 +126,13 @@ export default async function handler(req, res) {
           headers: { 
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(sheetData)
+          body: JSON.stringify(googleSheetsPayload)
         });
         
         const responseText = await response.text();
         console.log('Google Sheets response:', response.status, responseText);
         
-        if (response.ok) {
+        if (response.ok || response.status === 302) {
           googleSheetsSuccess = true;
         } else {
           console.error('Google Sheets error:', response.status, responseText);

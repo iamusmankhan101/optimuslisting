@@ -73,10 +73,68 @@ module.exports = async (req, res) => {
                 RETURNING id
             `;
 
+            const id = result[0].id;
+
+            // Send to Google Sheets
+            let googleSheetsSuccess = false;
+            try {
+                const googleSheetWebhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
+                if (googleSheetWebhookUrl) {
+                    console.log('Sending buyer requirements to Google Sheets...');
+                    
+                    const googleSheetsPayload = {
+                        sheet: 'BuyerRequirements',
+                        data: {
+                            id,
+                            name,
+                            email,
+                            phone,
+                            purpose,
+                            category,
+                            sub_category,
+                            emirate,
+                            preferred_areas,
+                            bedrooms,
+                            bathrooms,
+                            min_size_sqft,
+                            max_size_sqft,
+                            maid_room,
+                            furnishing,
+                            min_budget,
+                            max_budget,
+                            payment_method,
+                            additional_requirements
+                        }
+                    };
+                    
+                    const response = await fetch(googleSheetWebhookUrl, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(googleSheetsPayload)
+                    });
+                    
+                    const responseText = await response.text();
+                    console.log('Google Sheets response:', response.status, responseText);
+                    
+                    if (response.ok || response.status === 302) {
+                        googleSheetsSuccess = true;
+                    } else {
+                        console.error('Google Sheets error:', response.status, responseText);
+                    }
+                } else {
+                    console.warn('GOOGLE_SHEET_WEBHOOK_URL not configured');
+                }
+            } catch (err) {
+                console.error('Error syncing to Google Sheets:', err.message, err);
+            }
+
             return res.status(200).json({ 
                 success: true, 
                 message: 'Buyer requirements submitted successfully',
-                id: result[0].id
+                id,
+                googleSheetsSync: googleSheetsSuccess
             });
         }
 
