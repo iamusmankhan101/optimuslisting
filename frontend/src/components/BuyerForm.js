@@ -74,39 +74,67 @@ function BuyerForm() {
             });
 
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Server error:', errorText);
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
 
             if (data.success) {
-                // Fetch matching properties
-                setStatus({ type: 'info', message: 'Finding matching properties...' });
+                setStatus({ type: 'success', message: 'Requirements submitted successfully! We will contact you soon with matching properties.' });
                 
-                const matchResponse = await fetch(`${API_BASE}/match-properties`, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
+                // Reset form
+                setFormData({
+                    name: '',
+                    email: '',
+                    phone: '',
+                    purpose: '',
+                    category: '',
+                    sub_category: '',
+                    emirate: '',
+                    preferred_areas: '',
+                    bedrooms: '',
+                    bathrooms: '',
+                    min_size_sqft: '',
+                    max_size_sqft: '',
+                    maid_room: '',
+                    furnishing: '',
+                    min_budget: '',
+                    max_budget: '',
+                    payment_method: '',
+                    additional_requirements: ''
                 });
+                setCurrentStep(1);
+                
+                // Optional: Try to fetch matching properties but don't block on failure
+                try {
+                    const matchResponse = await fetch(`${API_BASE}/match-properties`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
 
-                if (matchResponse.ok) {
-                    const matchData = await matchResponse.json();
-                    if (matchData.success) {
-                        setMatchingProperties(matchData.matches);
-                        setShowResults(true);
+                    if (matchResponse.ok) {
+                        const matchData = await matchResponse.json();
+                        if (matchData.success && matchData.matches && matchData.matches.length > 0) {
+                            setMatchingProperties(matchData.matches);
+                            setShowResults(true);
+                        }
                     }
-                } else {
-                    // Even if matching fails, show success message
-                    setStatus({ type: 'success', message: 'Requirements submitted successfully!' });
+                } catch (matchError) {
+                    console.log('Property matching not available:', matchError);
+                    // Ignore matching errors - form submission was successful
                 }
             } else {
                 setStatus({ type: 'error', message: data.error || 'Submission failed' });
             }
         } catch (error) {
-            setStatus({ type: 'error', message: `Error: ${error.message}` });
+            console.error('Submission error:', error);
+            setStatus({ type: 'error', message: `Error: ${error.message}. Please try again or contact support.` });
         } finally {
             setLoading(false);
         }

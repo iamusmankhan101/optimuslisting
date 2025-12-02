@@ -23,79 +23,40 @@ module.exports = async (req, res) => {
             bedrooms,
             bathrooms,
             min_budget,
-            max_budget,
-            min_size_sqft,
-            max_size_sqft
+            max_budget
         } = req.body;
 
-        // Build dynamic query - Focus on: Budget, Location, and Property Specifications
+        // Simple query without complex casting
         let query = 'SELECT * FROM property_listings WHERE 1=1';
         const params = [];
         let paramIndex = 1;
 
-        // LOCATION MATCH - Emirate (Required)
+        // Match emirate
         if (emirate) {
             query += ' AND emirate = $' + paramIndex;
             params.push(emirate);
             paramIndex++;
         }
 
-        // PROPERTY SPECIFICATIONS - Bedrooms (Required)
+        // Match purpose
+        if (purpose) {
+            query += " AND (purpose = $" + paramIndex + " OR purpose = 'Both')";
+            params.push(purpose);
+            paramIndex++;
+        }
+
+        // Match bedrooms - simple string match
         if (bedrooms) {
-            if (bedrooms === 'Studio') {
-                query += " AND bedrooms = 'Studio'";
-            } else if (bedrooms === '6+') {
-                query += " AND (bedrooms = '6+' OR (bedrooms ~ '^[0-9]+$' AND CAST(bedrooms AS INTEGER) >= 6))";
-            } else {
-                // Match exact or higher - only cast if it's a number
-                query += ' AND (bedrooms = $' + paramIndex + " OR bedrooms = '" + bedrooms + "+' OR (bedrooms ~ '^[0-9]+$' AND CAST(bedrooms AS INTEGER) >= " + bedrooms + '))';
-                params.push(bedrooms);
-                paramIndex++;
-            }
+            query += ' AND bedrooms = $' + paramIndex;
+            params.push(bedrooms);
+            paramIndex++;
         }
 
-        // PROPERTY SPECIFICATIONS - Bathrooms (Required)
+        // Match bathrooms - simple string match
         if (bathrooms) {
-            if (bathrooms === '5+') {
-                query += " AND (bathrooms = '5+' OR (bathrooms ~ '^[0-9]+$' AND CAST(bathrooms AS INTEGER) >= 5))";
-            } else {
-                // Match exact or higher - only cast if it's a number
-                query += ' AND (bathrooms = $' + paramIndex + " OR bathrooms = '" + bathrooms + "+' OR (bathrooms ~ '^[0-9]+$' AND CAST(bathrooms AS INTEGER) >= " + bathrooms + '))';
-                params.push(bathrooms);
-                paramIndex++;
-            }
-        }
-
-        // PROPERTY SPECIFICATIONS - Size Range (Optional)
-        if (min_size_sqft && max_size_sqft) {
-            query += " AND CAST(NULLIF(REGEXP_REPLACE(size_sqft, '[^0-9]', '', 'g'), '') AS INTEGER) BETWEEN $" + paramIndex + ' AND $' + (paramIndex + 1);
-            params.push(min_size_sqft, max_size_sqft);
-            paramIndex += 2;
-        } else if (min_size_sqft) {
-            query += " AND CAST(NULLIF(REGEXP_REPLACE(size_sqft, '[^0-9]', '', 'g'), '') AS INTEGER) >= $" + paramIndex;
-            params.push(min_size_sqft);
+            query += ' AND bathrooms = $' + paramIndex;
+            params.push(bathrooms);
             paramIndex++;
-        } else if (max_size_sqft) {
-            query += " AND CAST(NULLIF(REGEXP_REPLACE(size_sqft, '[^0-9]', '', 'g'), '') AS INTEGER) <= $" + paramIndex;
-            params.push(max_size_sqft);
-            paramIndex++;
-        }
-
-        // BUDGET MATCH - Based on Purpose (Required)
-        if (min_budget && max_budget) {
-            if (purpose === 'Buy') {
-                // Match against sale price
-                query += " AND (purpose = 'Sale' OR purpose = 'Both')";
-                query += " AND CAST(NULLIF(REGEXP_REPLACE(sale_price, '[^0-9]', '', 'g'), '') AS BIGINT) BETWEEN $" + paramIndex + ' AND $' + (paramIndex + 1);
-                params.push(min_budget, max_budget);
-                paramIndex += 2;
-            } else if (purpose === 'Rent') {
-                // Match against asking rent
-                query += " AND (purpose = 'Rent' OR purpose = 'Both')";
-                query += " AND CAST(NULLIF(REGEXP_REPLACE(asking_rent, '[^0-9]', '', 'g'), '') AS BIGINT) BETWEEN $" + paramIndex + ' AND $' + (paramIndex + 1);
-                params.push(min_budget, max_budget);
-                paramIndex += 2;
-            }
         }
 
         query += ' ORDER BY created_at DESC LIMIT 50';
@@ -115,7 +76,7 @@ module.exports = async (req, res) => {
         console.error('Error matching properties:', error);
         res.status(500).json({ 
             success: false, 
-            error: error.message || 'Failed to match properties' 
+            error: error.message || 'Failed to match properties'
         });
     }
 };

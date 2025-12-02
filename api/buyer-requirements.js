@@ -10,9 +10,10 @@ module.exports = async (req, res) => {
         return res.status(200).end();
     }
 
-    if (req.method === 'GET') {
-        try {
-            const sql = neon(process.env.DATABASE_URL);
+    try {
+        const sql = neon(process.env.DATABASE_URL);
+
+        if (req.method === 'GET') {
             const requirements = await sql`
                 SELECT * FROM buyer_requirements 
                 ORDER BY created_at DESC
@@ -22,98 +23,71 @@ module.exports = async (req, res) => {
                 success: true, 
                 requirements 
             });
-        } catch (error) {
-            console.error('Error fetching buyer requirements:', error);
-            return res.status(500).json({ 
-                success: false, 
-                error: error.message 
-            });
-        }
-    }
-
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
-
-    try {
-        const sql = neon(process.env.DATABASE_URL);
-        
-        const {
-            name,
-            email,
-            phone,
-            purpose,
-            category,
-            sub_category,
-            emirate,
-            preferred_areas,
-            bedrooms,
-            bathrooms,
-            min_size_sqft,
-            max_size_sqft,
-            maid_room,
-            furnishing,
-            min_budget,
-            max_budget,
-            payment_method,
-            additional_requirements
-        } = req.body;
-
-        // Validate required fields
-        if (!name || !email || !phone || !purpose || !category || !sub_category || !emirate || !bedrooms || !bathrooms || !min_budget || !max_budget) {
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Missing required fields' 
-            });
         }
 
-        // Insert into database
-        const result = await sql`
-            INSERT INTO buyer_requirements (
-                name, email, phone, purpose, category, sub_category, 
-                emirate, preferred_areas, bedrooms, bathrooms, 
-                min_size_sqft, max_size_sqft, maid_room, furnishing,
-                min_budget, max_budget, payment_method, 
-                additional_requirements, created_at
-            ) VALUES (
-                ${name}, ${email}, ${phone}, ${purpose}, ${category}, ${sub_category},
-                ${emirate}, ${preferred_areas}, ${bedrooms}, ${bathrooms},
-                ${min_size_sqft}, ${max_size_sqft}, ${maid_room}, ${furnishing},
-                ${min_budget}, ${max_budget}, ${payment_method},
-                ${additional_requirements}, NOW()
-            )
-            RETURNING id
-        `;
+        if (req.method === 'POST') {
+            const {
+                name,
+                email,
+                phone,
+                purpose,
+                category,
+                sub_category,
+                emirate,
+                preferred_areas,
+                bedrooms,
+                bathrooms,
+                min_size_sqft,
+                max_size_sqft,
+                maid_room,
+                furnishing,
+                min_budget,
+                max_budget,
+                payment_method,
+                additional_requirements
+            } = req.body;
 
-        // Also log to Google Sheets if configured
-        const sheetsUrl = process.env.GOOGLE_SHEETS_URL;
-        if (sheetsUrl && !sheetsUrl.includes('YOUR_DEPLOYMENT_ID')) {
-            try {
-                await fetch(sheetsUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        sheet: 'BuyerRequirements',
-                        data: req.body
-                    })
+            // Validate required fields
+            if (!name || !email || !phone || !purpose || !category || !sub_category || !emirate || !bedrooms || !bathrooms || !min_budget || !max_budget) {
+                return res.status(400).json({ 
+                    success: false, 
+                    error: 'Missing required fields' 
                 });
-            } catch (sheetsError) {
-                console.error('Google Sheets logging failed:', sheetsError);
-                // Continue even if sheets logging fails
             }
+
+            // Insert into database using parameterized query
+            const result = await sql`
+                INSERT INTO buyer_requirements (
+                    name, email, phone, purpose, category, sub_category, 
+                    emirate, preferred_areas, bedrooms, bathrooms, 
+                    min_size_sqft, max_size_sqft, maid_room, furnishing,
+                    min_budget, max_budget, payment_method, 
+                    additional_requirements, created_at
+                ) VALUES (
+                    ${name}, ${email}, ${phone}, ${purpose}, ${category}, ${sub_category},
+                    ${emirate}, ${preferred_areas || null}, ${bedrooms}, ${bathrooms},
+                    ${min_size_sqft || null}, ${max_size_sqft || null}, ${maid_room || null}, ${furnishing || null},
+                    ${min_budget}, ${max_budget}, ${payment_method || null},
+                    ${additional_requirements || null}, NOW()
+                )
+                RETURNING id
+            `;
+
+            return res.status(200).json({ 
+                success: true, 
+                message: 'Buyer requirements submitted successfully',
+                id: result[0].id
+            });
         }
 
-        res.status(200).json({ 
-            success: true, 
-            message: 'Buyer requirements submitted successfully',
-            id: result[0].id
-        });
+        return res.status(405).json({ error: 'Method not allowed' });
 
     } catch (error) {
-        console.error('Error submitting buyer requirements:', error);
-        res.status(500).json({ 
+        console.error('Error in buyer-requirements:', error);
+        return res.status(500).json({ 
             success: false, 
-            error: error.message || 'Failed to submit requirements' 
+            error: error.message || 'Internal server error',
+            details: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
 };

@@ -246,74 +246,80 @@ function Form() {
                     </div>
                 </div>
 
-                <div className="section-header">Sales Details</div>
+                {formData.purpose === 'Sale' && (
+                    <>
+                        <div className="section-header">Sales Details</div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="sale_price">17. Sale Price</label>
+                                <input type="text" id="sale_price" name="sale_price" value={formData.sale_price} onChange={handleChange} placeholder="AED" required />
+                            </div>
 
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="sale_price">17. Sale Price</label>
-                        <input type="text" id="sale_price" name="sale_price" value={formData.sale_price} onChange={handleChange} placeholder="AED" />
-                    </div>
+                            <div className="form-group">
+                                <label htmlFor="unit_status">18. Unit Status</label>
+                                <select id="unit_status" name="unit_status" value={formData.unit_status} onChange={handleChange} required>
+                                    <option value="">Select</option>
+                                    <option value="Vacant">Vacant</option>
+                                    <option value="Occupied">Occupied</option>
+                                </select>
+                            </div>
+                        </div>
 
-                    <div className="form-group">
-                        <label htmlFor="unit_status">18. Unit Status</label>
-                        <select id="unit_status" name="unit_status" value={formData.unit_status} onChange={handleChange}>
-                            <option value="">Select</option>
-                            <option value="Vacant">Vacant</option>
-                            <option value="Occupied">Occupied</option>
-                        </select>
-                    </div>
-                </div>
+                        <div className="form-group">
+                            <label htmlFor="rented_details">19. Rented details</label>
+                            <input type="text" id="rented_details" name="rented_details" value={formData.rented_details} onChange={handleChange} />
+                        </div>
 
-                <div className="form-group">
-                    <label htmlFor="rented_details">19. Rented details</label>
-                    <input type="text" id="rented_details" name="rented_details" value={formData.rented_details} onChange={handleChange} />
-                </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="notice_given">20. Notice Given</label>
+                                <input type="text" id="notice_given" name="notice_given" value={formData.notice_given} onChange={handleChange} />
+                            </div>
 
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="notice_given">20. Notice Given</label>
-                        <input type="text" id="notice_given" name="notice_given" value={formData.notice_given} onChange={handleChange} />
-                    </div>
+                            <div className="form-group">
+                                <label htmlFor="sales_agent_commission">21. Agent Commission</label>
+                                <input type="text" id="sales_agent_commission" name="sales_agent_commission" value={formData.sales_agent_commission} onChange={handleChange} placeholder="%" />
+                            </div>
+                        </div>
+                    </>
+                )}
 
-                    <div className="form-group">
-                        <label htmlFor="sales_agent_commission">21. Agent Commission</label>
-                        <input type="text" id="sales_agent_commission" name="sales_agent_commission" value={formData.sales_agent_commission} onChange={handleChange} placeholder="%" />
-                    </div>
-                </div>
+                {formData.purpose === 'Rent' && (
+                    <>
+                        <div className="section-header">Rent Details</div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="asking_rent">17. Asking Rent</label>
+                                <input type="text" id="asking_rent" name="asking_rent" value={formData.asking_rent} onChange={handleChange} placeholder="AED" required />
+                            </div>
 
-                <div className="section-header">Rent Details</div>
+                            <div className="form-group">
+                                <label htmlFor="number_of_chq">18. Number of Chq</label>
+                                <select id="number_of_chq" name="number_of_chq" value={formData.number_of_chq} onChange={handleChange} required>
+                                    <option value="">Select</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="6">6</option>
+                                    <option value="12">12</option>
+                                </select>
+                            </div>
+                        </div>
 
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="asking_rent">22. Asking Rent</label>
-                        <input type="text" id="asking_rent" name="asking_rent" value={formData.asking_rent} onChange={handleChange} placeholder="AED" />
-                    </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="security_deposit">19. Security Deposit</label>
+                                <input type="text" id="security_deposit" name="security_deposit" value={formData.security_deposit} onChange={handleChange} placeholder="AED" />
+                            </div>
 
-                    <div className="form-group">
-                        <label htmlFor="number_of_chq">23. Number of Chq</label>
-                        <select id="number_of_chq" name="number_of_chq" value={formData.number_of_chq} onChange={handleChange}>
-                            <option value="">Select</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="6">6</option>
-                            <option value="12">12</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="security_deposit">24. Security Deposit</label>
-                        <input type="text" id="security_deposit" name="security_deposit" value={formData.security_deposit} onChange={handleChange} placeholder="AED" />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="rent_agent_commission">25. Agent Commission</label>
-                        <input type="text" id="rent_agent_commission" name="rent_agent_commission" value={formData.rent_agent_commission} onChange={handleChange} placeholder="%" />
-                    </div>
-                </div>
+                            <div className="form-group">
+                                <label htmlFor="rent_agent_commission">20. Agent Commission</label>
+                                <input type="text" id="rent_agent_commission" name="rent_agent_commission" value={formData.rent_agent_commission} onChange={handleChange} placeholder="%" />
+                            </div>
+                        </div>
+                    </>
+                )}
 
                 <div className="section-header">🔹 Section 4 — Viewing & Status</div>
 
