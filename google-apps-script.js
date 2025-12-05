@@ -4,6 +4,18 @@
 // Configuration - Your Google Drive Folder ID
 const FOLDER_ID = '1mZHljfLGBsUeae3GzlCln3ZRgG509-IIn7F2VwxcLC7ykCtwgqJNoswUBa3FaCsm93qAHuRV';
 
+// Handle CORS preflight requests
+function doGet(e) {
+  return ContentService.createTextOutput(JSON.stringify({
+    status: 'ok',
+    message: 'Google Drive Upload API is running'
+  }))
+  .setMimeType(ContentService.MimeType.JSON)
+  .setHeader('Access-Control-Allow-Origin', '*')
+  .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+  .setHeader('Access-Control-Allow-Headers', 'Content-Type');
+}
+
 function doPost(e) {
   try {
     const folder = DriveApp.getFolderById(FOLDER_ID);
@@ -92,14 +104,22 @@ function doPost(e) {
       folderId: subfolder.getId(),
       files: uploadedFiles,
       message: 'Uploaded ' + uploadedFiles.length + ' files successfully'
-    })).setMimeType(ContentService.MimeType.JSON);
+    }))
+    .setMimeType(ContentService.MimeType.JSON)
+    .setHeader('Access-Control-Allow-Origin', '*')
+    .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    .setHeader('Access-Control-Allow-Headers', 'Content-Type');
     
   } catch (error) {
     Logger.log('Error: ' + error.toString());
     return ContentService.createTextOutput(JSON.stringify({
       success: false,
       error: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
+    }))
+    .setMimeType(ContentService.MimeType.JSON)
+    .setHeader('Access-Control-Allow-Origin', '*')
+    .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    .setHeader('Access-Control-Allow-Headers', 'Content-Type');
   }
 }
 

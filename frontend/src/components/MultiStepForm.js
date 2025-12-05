@@ -108,6 +108,11 @@ function MultiStepForm() {
                     
                     const driveUploadUrl = process.env.REACT_APP_GOOGLE_DRIVE_UPLOAD_URL;
                     
+                    console.log('Drive Upload URL:', driveUploadUrl);
+                    console.log('Property Code:', formData.property_code);
+                    console.log('Images to upload:', propertyImages.length);
+                    console.log('Documents to upload:', documents.length);
+                    
                     if (!driveUploadUrl || driveUploadUrl.includes('YOUR_DEPLOYMENT_ID')) {
                         console.warn('Google Drive upload URL not configured, skipping file upload');
                         formData.property_images = propertyImages.map(f => f.name).join(', ');
@@ -117,6 +122,7 @@ function MultiStepForm() {
                         const imageFiles = await Promise.all(propertyImages.map(fileToBase64));
                         const documentFiles = await Promise.all(documents.map(fileToBase64));
                         
+                        console.log('Sending to Google Drive...');
                         const driveResponse = await fetch(driveUploadUrl, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -127,7 +133,9 @@ function MultiStepForm() {
                             })
                         });
                         
+                        console.log('Drive response status:', driveResponse.status);
                         const driveData = await driveResponse.json();
+                        console.log('Drive response data:', driveData);
                         
                         if (driveData.success) {
                             driveUrls = {
