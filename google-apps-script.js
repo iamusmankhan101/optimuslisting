@@ -2,18 +2,26 @@
 // Copy this entire code and paste it into your Google Apps Script project
 
 // Configuration - Your Google Drive Folder ID
-const FOLDER_ID = '1GjL05HE-A7tOn__fiIuxcgd6ZBhWxips';
+const FOLDER_ID = '1mZHljfLGBsUeae3GzlCln3ZRgG509-IIn7F2VwxcLC7ykCtwgqJNoswUBa3FaCsm93qAHuRV';
 
 function doPost(e) {
   try {
     const folder = DriveApp.getFolderById(FOLDER_ID);
     const data = JSON.parse(e.postData.contents);
     
-    // Create a subfolder for this property
+    // Create a subfolder for this property using property code
     const propertyCode = data.property_code || 'NO_CODE';
-    const timestamp = new Date().getTime();
-    const subfolderName = `${propertyCode}_${timestamp}`;
-    const subfolder = folder.createFolder(subfolderName);
+    
+    // Check if folder already exists, if so, use it; otherwise create new
+    let subfolder;
+    const existingFolders = folder.getFoldersByName(propertyCode);
+    if (existingFolders.hasNext()) {
+      subfolder = existingFolders.next();
+      Logger.log('Using existing folder: ' + propertyCode);
+    } else {
+      subfolder = folder.createFolder(propertyCode);
+      Logger.log('Created new folder: ' + propertyCode);
+    }
     
     const uploadedFiles = [];
     
@@ -40,7 +48,7 @@ function doPost(e) {
             type: 'image'
           });
           
-          Logger.log(`Uploaded image: ${fileData.name}`);
+          Logger.log('Uploaded image: ' + fileData.name);
         } catch (err) {
           Logger.log('Error uploading image: ' + err.toString());
         }
@@ -69,21 +77,21 @@ function doPost(e) {
             type: 'document'
           });
           
-          Logger.log(`Uploaded document: ${fileData.name}`);
+          Logger.log('Uploaded document: ' + fileData.name);
         } catch (err) {
           Logger.log('Error uploading document: ' + err.toString());
         }
       });
     }
     
-    Logger.log(`Total files uploaded: ${uploadedFiles.length}`);
+    Logger.log('Total files uploaded: ' + uploadedFiles.length);
     
     return ContentService.createTextOutput(JSON.stringify({
       success: true,
       folderUrl: subfolder.getUrl(),
       folderId: subfolder.getId(),
       files: uploadedFiles,
-      message: `Uploaded ${uploadedFiles.length} files successfully`
+      message: 'Uploaded ' + uploadedFiles.length + ' files successfully'
     })).setMimeType(ContentService.MimeType.JSON);
     
   } catch (error) {
@@ -121,7 +129,7 @@ function listRecentUploads() {
   let count = 0;
   while (subfolders.hasNext() && count < 10) {
     const subfolder = subfolders.next();
-    Logger.log(`- ${subfolder.getName()} (${subfolder.getUrl()})`);
+    Logger.log('- ' + subfolder.getName() + ' (' + subfolder.getUrl() + ')');
     count++;
   }
 }
