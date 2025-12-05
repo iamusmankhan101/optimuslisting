@@ -106,53 +106,45 @@ function MultiStepForm() {
                 try {
                     setStatus({ type: 'info', message: 'Uploading files to Google Drive...' });
                     
-                    const driveUploadUrl = process.env.REACT_APP_GOOGLE_DRIVE_UPLOAD_URL;
-                    
-                    console.log('Drive Upload URL:', driveUploadUrl);
                     console.log('Property Code:', formData.property_code);
                     console.log('Images to upload:', propertyImages.length);
                     console.log('Documents to upload:', documents.length);
                     
-                    if (!driveUploadUrl || driveUploadUrl.includes('YOUR_DEPLOYMENT_ID')) {
-                        console.warn('Google Drive upload URL not configured, skipping file upload');
+                    // Convert files to base64
+                    const imageFiles = await Promise.all(propertyImages.map(fileToBase64));
+                    const documentFiles = await Promise.all(documents.map(fileToBase64));
+                    
+                    console.log('Sending to Google Drive via proxy...');
+                    // Use proxy endpoint to avoid CORS issues
+                    const driveResponse = await fetch(`${API_BASE}/upload-drive`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            property_code: formData.property_code || 'NO_CODE',
+                            property_images: imageFiles,
+                            documents: documentFiles
+                        })
+                    });
+                    
+                    console.log('Drive response status:', driveResponse.status);
+                    const driveData = await driveResponse.json();
+                    console.log('Drive response data:', driveData);
+                    
+                    if (driveData.success) {
+                        driveUrls = {
+                            folderUrl: driveData.folderUrl,
+                            images: driveData.files.filter(f => f.type === 'image').map(f => f.url),
+                            documents: driveData.files.filter(f => f.type === 'document').map(f => f.url)
+                        };
+                        
+                        // Update formData with Drive URLs
+                        formData.property_images = driveUrls.images.join(', ');
+                        formData.documents = driveUrls.documents.join(', ');
+                    } else {
+                        console.warn('Google Drive upload failed:', driveData.error);
+                        // Store file names instead
                         formData.property_images = propertyImages.map(f => f.name).join(', ');
                         formData.documents = documents.map(f => f.name).join(', ');
-                    } else {
-                        // Convert files to base64
-                        const imageFiles = await Promise.all(propertyImages.map(fileToBase64));
-                        const documentFiles = await Promise.all(documents.map(fileToBase64));
-                        
-                        console.log('Sending to Google Drive...');
-                        const driveResponse = await fetch(driveUploadUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                property_code: formData.property_code || 'NO_CODE',
-                                property_images: imageFiles,
-                                documents: documentFiles
-                            })
-                        });
-                        
-                        console.log('Drive response status:', driveResponse.status);
-                        const driveData = await driveResponse.json();
-                        console.log('Drive response data:', driveData);
-                        
-                        if (driveData.success) {
-                            driveUrls = {
-                                folderUrl: driveData.folderUrl,
-                                images: driveData.files.filter(f => f.type === 'image').map(f => f.url),
-                                documents: driveData.files.filter(f => f.type === 'document').map(f => f.url)
-                            };
-                            
-                            // Update formData with Drive URLs
-                            formData.property_images = driveUrls.images.join(', ');
-                            formData.documents = driveUrls.documents.join(', ');
-                        } else {
-                            console.warn('Google Drive upload failed:', driveData.error);
-                            // Store file names instead
-                            formData.property_images = propertyImages.map(f => f.name).join(', ');
-                            formData.documents = documents.map(f => f.name).join(', ');
-                        }
                     }
                 } catch (driveError) {
                     console.error('Google Drive upload error:', driveError);

@@ -18,10 +18,10 @@ Value: https://script.google.com/macros/s/AKfycbyYxNE0XzlLtmgUbEGKf28hpMkwskvisB
 Environment: Production, Preview, Development
 ```
 
-### 3. Google Drive Upload (Optional)
+### 3. Google Drive Upload (Required for file uploads)
 ```
-Name: REACT_APP_GOOGLE_DRIVE_UPLOAD_URL
-Value: https://script.google.com/macros/s/AKfycbz1hVb5sNOs-uVO3Y3HLCn0BR3dXTZukOMrWPmS0Xxud9KfxxTVhBWXuR3eVzUoN_gMAw/exec
+Name: GOOGLE_DRIVE_UPLOAD_URL
+Value: https://script.google.com/macros/s/AKfycbyBelkvTugGyu81fO3mRMIsN-yIte4ratDNmTyg-8Xy8BcvtQyWSKQa-1mMgWoL1mGeNQ/exec
 Environment: Production, Preview, Development
 ```
 
