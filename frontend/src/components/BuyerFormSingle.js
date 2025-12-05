@@ -14,19 +14,13 @@ function BuyerFormSingle() {
         name: '',
         email: '',
         phone: '',
-        purpose: 'Sale',
         category: '',
         sub_category: '',
         emirate: '',
         preferred_areas: '',
         bedrooms: '',
         bathrooms: '',
-        min_size_sqft: '',
-        max_size_sqft: '',
-        maid_room: '',
-        furnishing: '',
         min_budget: '',
-        max_budget: '',
         payment_method: '',
         additional_requirements: ''
     });
@@ -88,10 +82,9 @@ function BuyerFormSingle() {
                 
                 setStatus({ type: 'success', message: 'Requirements submitted successfully! We will contact you soon.' });
                 setFormData({
-                    name: '', email: '', phone: '', purpose: 'Sale', category: '', sub_category: '',
+                    name: '', email: '', phone: '', category: '', sub_category: '',
                     emirate: '', preferred_areas: '', bedrooms: '', bathrooms: '',
-                    min_size_sqft: '', max_size_sqft: '', maid_room: '', furnishing: '',
-                    min_budget: '', max_budget: '', payment_method: '', additional_requirements: ''
+                    min_budget: '', payment_method: '', additional_requirements: ''
                 });
             } else {
                 setStatus({ type: 'error', message: data.error || 'Submission failed' });
@@ -108,10 +101,9 @@ function BuyerFormSingle() {
         setShowResults(false);
         setMatchingProperties([]);
         setFormData({
-            name: '', email: '', phone: '', purpose: 'Sale', category: '', sub_category: '',
+            name: '', email: '', phone: '', category: '', sub_category: '',
             emirate: '', preferred_areas: '', bedrooms: '', bathrooms: '',
-            min_size_sqft: '', max_size_sqft: '', maid_room: '', furnishing: '',
-            min_budget: '', max_budget: '', payment_method: '', additional_requirements: ''
+            min_budget: '', payment_method: '', additional_requirements: ''
         });
         setStatus({ type: '', message: '' });
     };
@@ -170,21 +162,13 @@ function BuyerFormSingle() {
 
                     <div className="form-section">
                         <div className="form-section-title">Property Type</div>
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Purpose <span className="required">*</span></label>
-                                <select name="purpose" value={formData.purpose} onChange={handleChange} required>
-                                    <option value="Sale">Sale</option>
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label>Category <span className="required">*</span></label>
-                                <select name="category" value={formData.category} onChange={handleChange} required>
-                                    <option value="">Select category</option>
-                                    <option value="Residential">Residential</option>
-                                    <option value="Commercial">Commercial</option>
-                                </select>
-                            </div>
+                        <div className="form-group">
+                            <label>Category <span className="required">*</span></label>
+                            <select name="category" value={formData.category} onChange={handleChange} required>
+                                <option value="">Select category</option>
+                                <option value="Residential">Residential</option>
+                                <option value="Commercial">Commercial</option>
+                            </select>
                         </div>
                         <div className="form-group">
                             <label>Sub Category <span className="required">*</span></label>
@@ -248,50 +232,14 @@ function BuyerFormSingle() {
                                 </select>
                             </div>
                         </div>
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Min Size (Sq. Ft)</label>
-                                <input type="number" name="min_size_sqft" value={formData.min_size_sqft} onChange={handleChange} placeholder="Minimum size" />
-                            </div>
-                            <div className="form-group">
-                                <label>Max Size (Sq. Ft)</label>
-                                <input type="number" name="max_size_sqft" value={formData.max_size_sqft} onChange={handleChange} placeholder="Maximum size" />
-                            </div>
-                        </div>
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Maid Room</label>
-                                <select name="maid_room" value={formData.maid_room} onChange={handleChange}>
-                                    <option value="">Select option</option>
-                                    <option value="Required">Required</option>
-                                    <option value="Not Required">Not Required</option>
-                                    <option value="Preferred">Preferred</option>
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label>Furnishing</label>
-                                <select name="furnishing" value={formData.furnishing} onChange={handleChange}>
-                                    <option value="">Select furnishing</option>
-                                    <option value="Furnished">Furnished</option>
-                                    <option value="Unfurnished">Unfurnished</option>
-                                    <option value="Semi-Furnished">Semi-Furnished</option>
-                                    <option value="Any">Any</option>
-                                </select>
-                            </div>
-                        </div>
+
                     </div>
 
                     <div className="form-section">
                         <div className="form-section-title">Budget & Additional Requirements</div>
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label>Min Budget (AED) <span className="required">*</span></label>
-                                <input type="number" name="min_budget" value={formData.min_budget} onChange={handleChange} placeholder="Minimum budget" required />
-                            </div>
-                            <div className="form-group">
-                                <label>Max Budget (AED) <span className="required">*</span></label>
-                                <input type="number" name="max_budget" value={formData.max_budget} onChange={handleChange} placeholder="Maximum budget" required />
-                            </div>
+                        <div className="form-group">
+                            <label>Min Budget (AED) <span className="required">*</span></label>
+                            <input type="number" name="min_budget" value={formData.min_budget} onChange={handleChange} placeholder="Minimum budget" required />
                         </div>
                         <div className="form-group">
                             <label>Payment Method</label>
