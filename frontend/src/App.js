@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MultiStepForm from './components/MultiStepForm';
-import BuyerForm from './components/BuyerForm';
+import BuyerForm from './components/BuyerFormSingle';
 import SubmissionsList from './components/SubmissionsList';
 import AdminJobs from './components/AdminJobs';
 import AdminDashboard from './components/AdminDashboard';
