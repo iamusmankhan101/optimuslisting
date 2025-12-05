@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
                 name,
                 email,
                 phone,
-                purpose: rawPurpose,
+                purpose,
                 category,
                 sub_category,
                 emirate,
@@ -46,9 +46,6 @@ module.exports = async (req, res) => {
                 payment_method,
                 additional_requirements
             } = req.body;
-
-            // Normalize purpose: "Buy" -> "Sale" to match property listings
-            const purpose = rawPurpose === 'Buy' ? 'Sale' : rawPurpose;
 
             // Validate required fields
             if (!name || !email || !phone || !purpose || !category || !sub_category || !emirate || !bedrooms || !bathrooms || !min_budget || !max_budget) {
