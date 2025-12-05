@@ -64,7 +64,45 @@ function MultiStepForm() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const validateStep = () => {
+        switch (currentStep) {
+            case 1:
+                if (!formData.email) {
+                    setStatus({ type: 'error', message: 'Contact Email is required' });
+                    return false;
+                }
+                break;
+            case 2:
+                if (!formData.purpose) {
+                    setStatus({ type: 'error', message: 'Purpose is required' });
+                    return false;
+                }
+                break;
+            case 3:
+                if (!formData.property_code) {
+                    setStatus({ type: 'error', message: 'Property Code is required' });
+                    return false;
+                }
+                break;
+            case 5:
+                if (!formData.agent_name) {
+                    setStatus({ type: 'error', message: 'Agent Name is required' });
+                    return false;
+                }
+                if (!formData.agent_mobile) {
+                    setStatus({ type: 'error', message: 'Agent Mobile Number is required' });
+                    return false;
+                }
+                break;
+        }
+        setStatus({ type: '', message: '' });
+        return true;
+    };
+
     const nextStep = () => {
+        if (!validateStep()) {
+            return;
+        }
         if (currentStep < steps.length) {
             setCurrentStep(currentStep + 1);
         }
@@ -297,7 +335,7 @@ function MultiStepForm() {
                             </div>
                             <div className="form-group">
                                 <label>Purpose <span className="required">*</span></label>
-                                <select name="purpose" value={formData.purpose} onChange={handleChange}>
+                                <select name="purpose" value={formData.purpose} onChange={handleChange} required>
                                     <option value="">Select purpose</option>
                                     <option value="Rent">Rent</option>
                                     <option value="Sale">Sale</option>
@@ -595,13 +633,13 @@ function MultiStepForm() {
                                 </div>
                                 <div className="form-group">
                                     <label>Agent Name <span className="required">*</span></label>
-                                    <input type="text" name="agent_name" value={formData.agent_name} onChange={handleChange} placeholder="Enter agent name" />
+                                    <input type="text" name="agent_name" value={formData.agent_name} onChange={handleChange} placeholder="Enter agent name" required />
                                 </div>
                             </div>
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Agent Mobile Number <span className="required">*</span></label>
-                                    <input type="tel" name="agent_mobile" value={formData.agent_mobile} onChange={handleChange} placeholder="Enter mobile number" />
+                                    <input type="tel" name="agent_mobile" value={formData.agent_mobile} onChange={handleChange} placeholder="Enter mobile number" required />
                                 </div>
                                 <div className="form-group">
                                     <label>Agent Email <span className="required">*</span></label>
