@@ -292,8 +292,6 @@ function MultiStepForm() {
                                     <option value="">Select purpose</option>
                                     <option value="Rent">Rent</option>
                                     <option value="Sale">Sale</option>
-                                    <option value="Both">Both</option>
-                                    <option value="Buy">Buy</option>
                                 </select>
                             </div>
                         </div>
