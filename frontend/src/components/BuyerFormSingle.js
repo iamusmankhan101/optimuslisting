@@ -143,7 +143,6 @@ function BuyerFormSingle() {
 
                 <form onSubmit={handleSubmit} className="form-card">
                     <div className="form-section">
-                        <div className="form-section-title">Contact Information</div>
                         <div className="form-row">
                             <div className="form-group">
                                 <label>Full Name <span className="required">*</span></label>
@@ -161,7 +160,6 @@ function BuyerFormSingle() {
                     </div>
 
                     <div className="form-section">
-                        <div className="form-section-title">Property Type</div>
                         <div className="form-group">
                             <label>Category <span className="required">*</span></label>
                             <select name="category" value={formData.category} onChange={handleChange} required>
@@ -186,7 +184,6 @@ function BuyerFormSingle() {
                     </div>
 
                     <div className="form-section">
-                        <div className="form-section-title">Location & Specifications</div>
                         <div className="form-row">
                             <div className="form-group">
                                 <label>Emirate <span className="required">*</span></label>
@@ -236,10 +233,9 @@ function BuyerFormSingle() {
                     </div>
 
                     <div className="form-section">
-                        <div className="form-section-title">Budget & Additional Requirements</div>
                         <div className="form-group">
-                            <label>Min Budget (AED) <span className="required">*</span></label>
-                            <input type="number" name="min_budget" value={formData.min_budget} onChange={handleChange} placeholder="Minimum budget" required />
+                            <label>Budget (AED) <span className="required">*</span></label>
+                            <input type="number" name="min_budget" value={formData.min_budget} onChange={handleChange} placeholder="Enter budget" required />
                         </div>
                         <div className="form-group">
                             <label>Payment Method</label>
