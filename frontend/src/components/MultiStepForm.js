@@ -71,6 +71,10 @@ function MultiStepForm() {
                     setStatus({ type: 'error', message: 'Contact Email is required' });
                     return false;
                 }
+                if (!formData.source_of_listing) {
+                    setStatus({ type: 'error', message: 'Source of Listing is required' });
+                    return false;
+                }
                 break;
             case 2:
                 if (!formData.purpose) {
@@ -290,8 +294,8 @@ function MultiStepForm() {
                                     <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter email address" required />
                                 </div>
                                 <div className="form-group">
-                                    <label>Source of Listing</label>
-                                    <select name="source_of_listing" value={formData.source_of_listing} onChange={handleChange}>
+                                    <label>Source of Listing <span className="required">*</span></label>
+                                    <select name="source_of_listing" value={formData.source_of_listing} onChange={handleChange} required>
                                         <option value="">Choose</option>
                                         <option value="Agent">Agent</option>
                                         <option value="Other Agency">Other Agency</option>
