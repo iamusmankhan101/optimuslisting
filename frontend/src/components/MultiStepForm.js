@@ -94,6 +94,8 @@ function MultiStepForm() {
                     return false;
                 }
                 break;
+            default:
+                break;
         }
         setStatus({ type: '', message: '' });
         return true;
