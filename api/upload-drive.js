@@ -38,18 +38,22 @@ export default async function handler(req, res) {
     });
 
     const responseText = await response.text();
-    console.log('Google Drive response:', response.status, responseText.substring(0, 200));
+    console.log('Google Drive response status:', response.status);
+    console.log('Google Drive response (first 500 chars):', responseText.substring(0, 500));
 
     // Parse and return the response
     try {
       const data = JSON.parse(responseText);
+      console.log('Parsed response:', data);
       res.status(response.ok ? 200 : 500).json(data);
     } catch (parseError) {
       console.error('Failed to parse Google Drive response:', parseError);
+      console.error('Full response text:', responseText);
       res.status(500).json({
         success: false,
-        error: 'Invalid response from Google Drive',
-        details: responseText.substring(0, 500)
+        error: 'Invalid response from Google Drive - likely HTML redirect or authorization issue',
+        details: responseText.substring(0, 1000),
+        hint: 'Check if the Google Apps Script is properly deployed and authorized'
       });
     }
 

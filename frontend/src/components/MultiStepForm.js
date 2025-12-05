@@ -251,7 +251,16 @@ function MultiStepForm() {
                                 </div>
                                 <div className="form-group">
                                     <label>Source of Listing</label>
-                                    <input type="text" name="source_of_listing" value={formData.source_of_listing} onChange={handleChange} placeholder="Enter listing source" />
+                                    <select name="source_of_listing" value={formData.source_of_listing} onChange={handleChange}>
+                                        <option value="">Choose</option>
+                                        <option value="Agent">Agent</option>
+                                        <option value="Other Agency">Other Agency</option>
+                                        <option value="Cold Calling">Cold Calling</option>
+                                        <option value="Direct Owner">Direct Owner</option>
+                                        <option value="Refferal">Refferal</option>
+                                        <option value="Internal Inventory">Internal Inventory</option>
+                                        <option value="Internal Agent">Internal Agent</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
