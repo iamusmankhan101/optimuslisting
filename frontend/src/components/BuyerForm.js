@@ -225,7 +225,6 @@ function BuyerForm() {
                                 <label>Purpose <span className="required">*</span></label>
                                 <select name="purpose" value={formData.purpose} onChange={handleChange} required>
                                     <option value="">Select purpose</option>
-                                    <option value="Rent">Rent</option>
                                     <option value="Sale">Sale</option>
                                 </select>
                             </div>

@@ -628,7 +628,7 @@ function MultiStepForm() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                     <h1 className="page-title">Property Listing</h1>
                     <a href="/buyer" className="btn-primary" style={{ textDecoration: 'none' }}>
-                        Looking to Buy/Rent? Click Here
+                        Buyer Requirements
                     </a>
                 </div>
 
