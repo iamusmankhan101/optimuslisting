@@ -139,6 +139,16 @@ function MultiStepForm() {
     };
 
     const handleSubmit = async () => {
+        // Validate required fields before submission
+        if (!formData.agent_name) {
+            setStatus({ type: 'error', message: 'Agent Name is required' });
+            return;
+        }
+        if (!formData.agent_mobile) {
+            setStatus({ type: 'error', message: 'Agent Mobile Number is required' });
+            return;
+        }
+        
         setLoading(true);
         setStatus({ type: '', message: '' });
 
