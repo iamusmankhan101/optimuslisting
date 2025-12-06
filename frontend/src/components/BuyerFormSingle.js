@@ -269,7 +269,7 @@ function BuyerFormSingle() {
                             type="submit" 
                             className="btn-primary" 
                             disabled={loading}
-                            style={{ width: '100%' }}
+                            style={{ width: '33%' }}
                         >
                             {loading ? 'Submitting...' : 'Submit Requirements'}
                         </button>
