@@ -264,7 +264,7 @@ function BuyerFormSingle() {
                         </div>
                     )}
 
-                    <div className="form-navigation">
+                    <div className="form-navigation" style={{ justifyContent: 'flex-start' }}>
                         <button 
                             type="submit" 
                             className="btn-primary" 
