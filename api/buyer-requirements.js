@@ -48,7 +48,7 @@ module.exports = async (req, res) => {
             } = req.body;
 
             // Validate required fields
-            if (!name || !email || !phone || !purpose || !category || !sub_category || !emirate || !bedrooms || !bathrooms || !min_budget || !max_budget) {
+            if (!name || !email || !phone || !category || !sub_category || !emirate || !bedrooms || !bathrooms || !min_budget) {
                 return res.status(400).json({ 
                     success: false, 
                     error: 'Missing required fields' 
@@ -64,10 +64,10 @@ module.exports = async (req, res) => {
                     min_budget, max_budget, payment_method, 
                     additional_requirements, created_at
                 ) VALUES (
-                    ${name}, ${email}, ${phone}, ${purpose}, ${category}, ${sub_category},
+                    ${name}, ${email}, ${phone}, ${purpose || 'Sale'}, ${category}, ${sub_category},
                     ${emirate}, ${preferred_areas || null}, ${bedrooms}, ${bathrooms},
                     ${min_size_sqft || null}, ${max_size_sqft || null}, ${maid_room || null}, ${furnishing || null},
-                    ${min_budget}, ${max_budget}, ${payment_method || null},
+                    ${min_budget}, ${max_budget || min_budget}, ${payment_method || null},
                     ${additional_requirements || null}, NOW()
                 )
                 RETURNING id
