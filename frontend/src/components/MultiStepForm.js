@@ -685,14 +685,14 @@ function MultiStepForm() {
                                     multiple 
                                     required
                                     onChange={(e) => {
-                                        const files = Array.from(e.target.files).slice(0, 10);
+                                        const files = Array.from(e.target.files).slice(0, 30);
                                         setPropertyImages(files);
                                         setFormData({...formData, property_images: files.map(f => f.name).join(', ')});
                                     }}
                                 />
                                 <span className="field-validation must">REQUIRED</span>
                                 <small style={{display: 'block', marginTop: '5px', color: '#666'}}>
-                                    Upload up to 10 supported files: PDF, document, or image. Max 10 MB per file.
+                                    Upload up to 30 supported files: PDF, document, or image. Max 10 MB per file.
                                 </small>
                                 {propertyImages.length > 0 && (
                                     <div style={{marginTop: '10px'}}>
@@ -713,14 +713,14 @@ function MultiStepForm() {
                                     multiple 
                                     required
                                     onChange={(e) => {
-                                        const files = Array.from(e.target.files).slice(0, 10);
+                                        const files = Array.from(e.target.files).slice(0, 30);
                                         setDocuments(files);
                                         setFormData({...formData, documents: files.map(f => f.name).join(', ')});
                                     }}
                                 />
                                 <span className="field-validation must">REQUIRED</span>
                                 <small style={{display: 'block', marginTop: '5px', color: '#666'}}>
-                                    Upload up to 10 supported files: PDF, document, or image. Max 10 MB per file.
+                                    Upload up to 30 supported files: PDF, document, or image. Max 10 MB per file.
                                 </small>
                                 {documents.length > 0 && (
                                     <div style={{marginTop: '10px'}}>
