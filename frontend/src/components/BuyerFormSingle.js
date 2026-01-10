@@ -59,6 +59,10 @@ function BuyerFormSingle() {
             setStatus({ type: 'error', message: 'Emirate is required' });
             return;
         }
+        if (!formData.bedrooms) {
+            setStatus({ type: 'error', message: 'Bedrooms is required' });
+            return;
+        }
         
         setLoading(true);
         setStatus({ type: '', message: '' });
@@ -239,8 +243,8 @@ function BuyerFormSingle() {
                         </div>
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Bedrooms</label>
-                                <select name="bedrooms" value={formData.bedrooms} onChange={handleChange}>
+                                <label>Bedrooms <span className="required">*</span></label>
+                                <select name="bedrooms" value={formData.bedrooms} onChange={handleChange} required>
                                     <option value="">Select bedrooms</option>
                                     <option value="Studio">Studio</option>
                                     <option value="1">1</option>
@@ -250,7 +254,7 @@ function BuyerFormSingle() {
                                     <option value="5">5</option>
                                     <option value="6+">6+</option>
                                 </select>
-                                <span className="field-validation optional">OPTIONAL</span>
+                                <span className="field-validation must">REQUIRED</span>
                             </div>
                             <div className="form-group">
                                 <label>Bathrooms</label>
