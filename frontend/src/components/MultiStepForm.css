@@ -448,8 +448,7 @@
     font-size: 0.7rem;
   }
 }
-/* File
- upload styling */
+/* File upload styling */
 input[type="file"] {
     padding: 10px;
     border: 2px dashed #ddd;
@@ -458,6 +457,7 @@ input[type="file"] {
     cursor: pointer;
     width: 100%;
     font-size: 14px;
+    padding-right: 80px; /* Make space for validation indicator */
 }
 
 input[type="file"]:hover {
@@ -469,6 +469,12 @@ input[type="file"]:focus {
     outline: none;
     border-color: #007bff;
     background: #fff;
+}
+
+/* Special positioning for file input validation indicators */
+.form-group input[type="file"] + .field-validation {
+    top: 15px;
+    transform: none;
 }
 
 .form-group small {

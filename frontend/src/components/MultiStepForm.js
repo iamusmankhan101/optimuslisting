@@ -138,6 +138,14 @@ function MultiStepForm() {
                     setStatus({ type: 'error', message: 'Size (Sq. Ft) is required' });
                     return false;
                 }
+                if (propertyImages.length === 0) {
+                    setStatus({ type: 'error', message: 'Property Images are required' });
+                    return false;
+                }
+                if (documents.length === 0) {
+                    setStatus({ type: 'error', message: 'Documents / More Pictures are required' });
+                    return false;
+                }
                 break;
             case 5:
                 if (!formData.agent_name) {
@@ -197,6 +205,14 @@ function MultiStepForm() {
         }
         if (!formData.agent_mobile) {
             setStatus({ type: 'error', message: 'Agent Mobile Number is required' });
+            return;
+        }
+        if (propertyImages.length === 0) {
+            setStatus({ type: 'error', message: 'Property Images are required' });
+            return;
+        }
+        if (documents.length === 0) {
+            setStatus({ type: 'error', message: 'Documents / More Pictures are required' });
             return;
         }
         
@@ -353,7 +369,7 @@ function MultiStepForm() {
                                 <div className="form-group">
                                     <label>Contact Email <span className="required">*</span></label>
                                     <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter email address" required />
-                                    <span className="field-validation must">MUST</span>
+                                    <span className="field-validation must">REQUIRED</span>
                                 </div>
                                 <div className="form-group">
                                     <label>Source of Listing <span className="required">*</span></label>
@@ -367,7 +383,7 @@ function MultiStepForm() {
                                         <option value="Internal Inventory">Internal Inventory</option>
                                         <option value="Internal Agent">Internal Agent</option>
                                     </select>
-                                    <span className="field-validation must">MUST</span>
+                                    <span className="field-validation must">REQUIRED</span>
                                 </div>
                             </div>
                         </div>
@@ -387,7 +403,7 @@ function MultiStepForm() {
                                         <option value="Residential">Residential</option>
                                         <option value="Commercial">Commercial</option>
                                     </select>
-                                    <span className="field-validation must">MUST</span>
+                                    <span className="field-validation must">REQUIRED</span>
                                 </div>
                                 <div className="form-group">
                                     <label>Sub Category <span className="required">*</span></label>
@@ -401,7 +417,7 @@ function MultiStepForm() {
                                         <option value="Shop">Shop</option>
                                         <option value="Warehouse">Warehouse</option>
                                     </select>
-                                    <span className="field-validation must">MUST</span>
+                                    <span className="field-validation must">REQUIRED</span>
                                 </div>
                             </div>
                             <div className="form-group">
@@ -411,7 +427,7 @@ function MultiStepForm() {
                                     <option value="Rent">Rent</option>
                                     <option value="Sale">Sale</option>
                                 </select>
-                                <span className="field-validation must">MUST</span>
+                                <span className="field-validation must">REQUIRED</span>
                             </div>
                         </div>
                         {(formData.purpose === 'Sale' || formData.purpose === 'Both') && (
@@ -421,7 +437,7 @@ function MultiStepForm() {
                                     <div className="form-group">
                                         <label>Sale Price (AED) <span className="required">*</span></label>
                                         <input type="text" name="sale_price" value={formData.sale_price} onChange={handleChange} placeholder="Enter sale price" required />
-                                        <span className="field-validation must">MUST</span>
+                                        <span className="field-validation must">REQUIRED</span>
                                     </div>
                                     <div className="form-group">
                                         <label>Unit Status <span className="required">*</span></label>
@@ -432,7 +448,7 @@ function MultiStepForm() {
                                             <option value="Rented">Rented</option>
                                             <option value="Vacant on Transfer">Vacant on Transfer</option>
                                         </select>
-                                        <span className="field-validation must">MUST</span>
+                                        <span className="field-validation must">REQUIRED</span>
                                     </div>
                                 </div>
                                 <div className="form-row">
@@ -469,7 +485,7 @@ function MultiStepForm() {
                                     <div className="form-group">
                                         <label>Asking Rent (AED) <span className="required">*</span></label>
                                         <input type="text" name="asking_rent" value={formData.asking_rent} onChange={handleChange} placeholder="Enter asking rent" required />
-                                        <span className="field-validation must">MUST</span>
+                                        <span className="field-validation must">REQUIRED</span>
                                     </div>
                                     <div className="form-group">
                                         <label>Number of Cheques <span className="required">*</span></label>
@@ -482,7 +498,7 @@ function MultiStepForm() {
                                             <option value="6">6</option>
                                             <option value="12">12</option>
                                         </select>
-                                        <span className="field-validation must">MUST</span>
+                                        <span className="field-validation must">REQUIRED</span>
                                     </div>
                                 </div>
                                 <div className="form-row">
@@ -511,7 +527,7 @@ function MultiStepForm() {
                                 <div className="form-group">
                                     <label>Property Code <span className="required">*</span></label>
                                     <input type="text" name="property_code" value={formData.property_code} onChange={handleChange} placeholder="Enter property code" required />
-                                    <span className="field-validation must">MUST</span>
+                                    <span className="field-validation must">REQUIRED</span>
                                 </div>
                                 <div className="form-group">
                                     <label>Emirate <span className="required">*</span></label>
@@ -525,19 +541,19 @@ function MultiStepForm() {
                                         <option value="Fujairah">Fujairah</option>
                                         <option value="Umm Al Quwain">Umm Al Quwain</option>
                                     </select>
-                                    <span className="field-validation must">MUST</span>
+                                    <span className="field-validation must">REQUIRED</span>
                                 </div>
                             </div>
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Area / Community <span className="required">*</span></label>
                                     <input type="text" name="area_community" value={formData.area_community} onChange={handleChange} placeholder="Enter area or community" required />
-                                    <span className="field-validation must">MUST</span>
+                                    <span className="field-validation must">REQUIRED</span>
                                 </div>
                                 <div className="form-group">
                                     <label>Building Name / Villa Community <span className="required">*</span></label>
                                     <input type="text" name="building_name" value={formData.building_name} onChange={handleChange} placeholder="Enter building or villa community name" required />
-                                    <span className="field-validation must">MUST</span>
+                                    <span className="field-validation must">REQUIRED</span>
                                 </div>
                             </div>
                             <div className="form-row">
@@ -574,7 +590,7 @@ function MultiStepForm() {
                                         <option value="5">5</option>
                                         <option value="6+">6+</option>
                                     </select>
-                                    <span className="field-validation must">MUST</span>
+                                    <span className="field-validation must">REQUIRED</span>
                                 </div>
                                 <div className="form-group">
                                     <label>Bathrooms <span className="required">*</span></label>
@@ -586,14 +602,14 @@ function MultiStepForm() {
                                         <option value="4">4</option>
                                         <option value="5+">5+</option>
                                     </select>
-                                    <span className="field-validation must">MUST</span>
+                                    <span className="field-validation must">REQUIRED</span>
                                 </div>
                             </div>
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Size (Sq. Ft) <span className="required">*</span></label>
                                     <input type="text" name="size_sqft" value={formData.size_sqft} onChange={handleChange} placeholder="Enter size in square feet" required />
-                                    <span className="field-validation must">MUST</span>
+                                    <span className="field-validation must">REQUIRED</span>
                                 </div>
                                 <div className="form-group">
                                     <label>Maid Room</label>
@@ -662,17 +678,19 @@ function MultiStepForm() {
                                 <span className="field-validation optional">OPTIONAL</span>
                             </div>
                             <div className="form-group">
-                                <label>Upload Property Images</label>
+                                <label>Upload Property Images <span className="required">*</span></label>
                                 <input 
                                     type="file" 
                                     accept="image/*,.pdf" 
                                     multiple 
+                                    required
                                     onChange={(e) => {
                                         const files = Array.from(e.target.files).slice(0, 10);
                                         setPropertyImages(files);
                                         setFormData({...formData, property_images: files.map(f => f.name).join(', ')});
                                     }}
                                 />
+                                <span className="field-validation must">REQUIRED</span>
                                 <small style={{display: 'block', marginTop: '5px', color: '#666'}}>
                                     Upload up to 10 supported files: PDF, document, or image. Max 10 MB per file.
                                 </small>
@@ -688,17 +706,19 @@ function MultiStepForm() {
                                 )}
                             </div>
                             <div className="form-group">
-                                <label>Add Documents / More Pictures</label>
+                                <label>Add Documents / More Pictures <span className="required">*</span></label>
                                 <input 
                                     type="file" 
                                     accept="image/*,.pdf,.doc,.docx" 
                                     multiple 
+                                    required
                                     onChange={(e) => {
                                         const files = Array.from(e.target.files).slice(0, 10);
                                         setDocuments(files);
                                         setFormData({...formData, documents: files.map(f => f.name).join(', ')});
                                     }}
                                 />
+                                <span className="field-validation must">REQUIRED</span>
                                 <small style={{display: 'block', marginTop: '5px', color: '#666'}}>
                                     Upload up to 10 supported files: PDF, document, or image. Max 10 MB per file.
                                 </small>
@@ -731,14 +751,14 @@ function MultiStepForm() {
                                 <div className="form-group">
                                     <label>Agent Name <span className="required">*</span></label>
                                     <input type="text" name="agent_name" value={formData.agent_name} onChange={handleChange} placeholder="Enter agent name" required />
-                                    <span className="field-validation must">MUST</span>
+                                    <span className="field-validation must">REQUIRED</span>
                                 </div>
                             </div>
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Agent Mobile Number <span className="required">*</span></label>
                                     <input type="tel" name="agent_mobile" value={formData.agent_mobile} onChange={handleChange} placeholder="Enter mobile number" required />
-                                    <span className="field-validation must">MUST</span>
+                                    <span className="field-validation must">REQUIRED</span>
                                 </div>
                                 <div className="form-group">
                                     <label>Agent Email</label>

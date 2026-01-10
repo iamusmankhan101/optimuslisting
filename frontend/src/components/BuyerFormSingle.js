@@ -178,18 +178,18 @@ function BuyerFormSingle() {
                             <div className="form-group">
                                 <label>Full Name <span className="required">*</span></label>
                                 <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter your full name" required />
-                                <span className="field-validation must">MUST</span>
+                                <span className="field-validation must">REQUIRED</span>
                             </div>
                             <div className="form-group">
                                 <label>Email <span className="required">*</span></label>
                                 <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter email address" required />
-                                <span className="field-validation must">MUST</span>
+                                <span className="field-validation must">REQUIRED</span>
                             </div>
                         </div>
                         <div className="form-group">
                             <label>Phone Number <span className="required">*</span></label>
                             <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="Enter phone number" required />
-                            <span className="field-validation must">MUST</span>
+                            <span className="field-validation must">REQUIRED</span>
                         </div>
                     </div>
 
@@ -201,7 +201,7 @@ function BuyerFormSingle() {
                                 <option value="Residential">Residential</option>
                                 <option value="Commercial">Commercial</option>
                             </select>
-                            <span className="field-validation must">MUST</span>
+                            <span className="field-validation must">REQUIRED</span>
                         </div>
                         <div className="form-group">
                             <label>Sub Category <span className="required">*</span></label>
@@ -215,7 +215,7 @@ function BuyerFormSingle() {
                                 <option value="Shop">Shop</option>
                                 <option value="Warehouse">Warehouse</option>
                             </select>
-                            <span className="field-validation must">MUST</span>
+                            <span className="field-validation must">REQUIRED</span>
                         </div>
                     </div>
 
@@ -233,7 +233,7 @@ function BuyerFormSingle() {
                                     <option value="Fujairah">Fujairah</option>
                                     <option value="Umm Al Quwain">Umm Al Quwain</option>
                                 </select>
-                                <span className="field-validation must">MUST</span>
+                                <span className="field-validation must">REQUIRED</span>
                             </div>
                             <div className="form-group">
                                 <label>Preferred Areas</label>
@@ -254,7 +254,7 @@ function BuyerFormSingle() {
                                     <option value="5">5</option>
                                     <option value="6+">6+</option>
                                 </select>
-                                <span className="field-validation must">MUST</span>
+                                <span className="field-validation must">REQUIRED</span>
                             </div>
                             <div className="form-group">
                                 <label>Bathrooms</label>
