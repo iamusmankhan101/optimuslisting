@@ -585,6 +585,53 @@ input[type="file"]:focus {
   border: 1px solid #93c5fd;
 }
 
+/* Field validation indicators */
+.field-validation {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.field-validation.must {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+}
+
+.field-validation.optional {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding-right: 80px; /* Make space for validation indicator */
+}
+
+/* Special handling for select dropdowns */
+.form-group select {
+  padding-right: 100px; /* Extra space for both dropdown arrow and validation */
+}
+
+/* Validation indicator positioning for textareas */
+.form-group textarea + .field-validation {
+  top: 20px;
+  transform: none;
+}
+
 .section-subtitle {
   font-size: 0.85rem;
   color: #6b7280;

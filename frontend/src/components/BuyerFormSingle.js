@@ -33,6 +33,37 @@ function BuyerFormSingle() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validate required fields
+        if (!formData.name) {
+            setStatus({ type: 'error', message: 'Full Name is required' });
+            return;
+        }
+        if (!formData.email) {
+            setStatus({ type: 'error', message: 'Email is required' });
+            return;
+        }
+        if (!formData.phone) {
+            setStatus({ type: 'error', message: 'Phone Number is required' });
+            return;
+        }
+        if (!formData.category) {
+            setStatus({ type: 'error', message: 'Category is required' });
+            return;
+        }
+        if (!formData.sub_category) {
+            setStatus({ type: 'error', message: 'Sub Category is required' });
+            return;
+        }
+        if (!formData.emirate) {
+            setStatus({ type: 'error', message: 'Emirate is required' });
+            return;
+        }
+        if (!formData.bedrooms) {
+            setStatus({ type: 'error', message: 'Bedrooms is required' });
+            return;
+        }
+        
         setLoading(true);
         setStatus({ type: '', message: '' });
 
@@ -147,15 +178,18 @@ function BuyerFormSingle() {
                             <div className="form-group">
                                 <label>Full Name <span className="required">*</span></label>
                                 <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter your full name" required />
+                                <span className="field-validation must">MUST</span>
                             </div>
                             <div className="form-group">
                                 <label>Email <span className="required">*</span></label>
                                 <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter email address" required />
+                                <span className="field-validation must">MUST</span>
                             </div>
                         </div>
                         <div className="form-group">
                             <label>Phone Number <span className="required">*</span></label>
                             <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="Enter phone number" required />
+                            <span className="field-validation must">MUST</span>
                         </div>
                     </div>
 
@@ -167,6 +201,7 @@ function BuyerFormSingle() {
                                 <option value="Residential">Residential</option>
                                 <option value="Commercial">Commercial</option>
                             </select>
+                            <span className="field-validation must">MUST</span>
                         </div>
                         <div className="form-group">
                             <label>Sub Category <span className="required">*</span></label>
@@ -180,6 +215,7 @@ function BuyerFormSingle() {
                                 <option value="Shop">Shop</option>
                                 <option value="Warehouse">Warehouse</option>
                             </select>
+                            <span className="field-validation must">MUST</span>
                         </div>
                     </div>
 
@@ -197,10 +233,12 @@ function BuyerFormSingle() {
                                     <option value="Fujairah">Fujairah</option>
                                     <option value="Umm Al Quwain">Umm Al Quwain</option>
                                 </select>
+                                <span className="field-validation must">MUST</span>
                             </div>
                             <div className="form-group">
                                 <label>Preferred Areas</label>
                                 <input type="text" name="preferred_areas" value={formData.preferred_areas} onChange={handleChange} placeholder="e.g., Dubai Marina, Downtown..." />
+                                <span className="field-validation optional">OPTIONAL</span>
                             </div>
                         </div>
                         <div className="form-row">
@@ -216,10 +254,11 @@ function BuyerFormSingle() {
                                     <option value="5">5</option>
                                     <option value="6+">6+</option>
                                 </select>
+                                <span className="field-validation must">MUST</span>
                             </div>
                             <div className="form-group">
-                                <label>Bathrooms <span className="required">*</span></label>
-                                <select name="bathrooms" value={formData.bathrooms} onChange={handleChange} required>
+                                <label>Bathrooms</label>
+                                <select name="bathrooms" value={formData.bathrooms} onChange={handleChange}>
                                     <option value="">Select bathrooms</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -227,6 +266,7 @@ function BuyerFormSingle() {
                                     <option value="4">4</option>
                                     <option value="5+">5+</option>
                                 </select>
+                                <span className="field-validation optional">OPTIONAL</span>
                             </div>
                         </div>
 
@@ -234,8 +274,9 @@ function BuyerFormSingle() {
 
                     <div className="form-section">
                         <div className="form-group">
-                            <label>Budget (AED) <span className="required">*</span></label>
-                            <input type="number" name="min_budget" value={formData.min_budget} onChange={handleChange} placeholder="Enter budget" required />
+                            <label>Budget (AED)</label>
+                            <input type="number" name="min_budget" value={formData.min_budget} onChange={handleChange} placeholder="Enter budget" />
+                            <span className="field-validation optional">OPTIONAL</span>
                         </div>
                         <div className="form-group">
                             <label>Payment Method</label>
@@ -245,6 +286,7 @@ function BuyerFormSingle() {
                                 <option value="Mortgage">Mortgage</option>
                                 <option value="Installment">Installment</option>
                             </select>
+                            <span className="field-validation optional">OPTIONAL</span>
                         </div>
                         <div className="form-group">
                             <label>Additional Requirements</label>
@@ -255,6 +297,7 @@ function BuyerFormSingle() {
                                 placeholder="Any specific requirements, amenities, or preferences..."
                                 rows="4"
                             />
+                            <span className="field-validation optional">OPTIONAL</span>
                         </div>
                     </div>
 
