@@ -382,7 +382,7 @@ function MultiStepForm() {
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Category <span className="required">*</span></label>
-                                    <select name="category" value={formData.category} onChange={handleChange}>
+                                    <select name="category" value={formData.category} onChange={handleChange} required>
                                         <option value="">Select category</option>
                                         <option value="Residential">Residential</option>
                                         <option value="Commercial">Commercial</option>
@@ -391,7 +391,7 @@ function MultiStepForm() {
                                 </div>
                                 <div className="form-group">
                                     <label>Sub Category <span className="required">*</span></label>
-                                    <select name="sub_category" value={formData.sub_category} onChange={handleChange}>
+                                    <select name="sub_category" value={formData.sub_category} onChange={handleChange} required>
                                         <option value="">Select sub category</option>
                                         <option value="Apartment">Apartment</option>
                                         <option value="Villa">Villa</option>
@@ -420,12 +420,12 @@ function MultiStepForm() {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label>Sale Price (AED) <span className="required">*</span></label>
-                                        <input type="text" name="sale_price" value={formData.sale_price} onChange={handleChange} placeholder="Enter sale price" />
+                                        <input type="text" name="sale_price" value={formData.sale_price} onChange={handleChange} placeholder="Enter sale price" required />
                                         <span className="field-validation must">MUST</span>
                                     </div>
                                     <div className="form-group">
                                         <label>Unit Status <span className="required">*</span></label>
-                                        <select name="unit_status" value={formData.unit_status} onChange={handleChange}>
+                                        <select name="unit_status" value={formData.unit_status} onChange={handleChange} required>
                                             <option value="">Select status</option>
                                             <option value="Owner Occupied">Owner Occupied</option>
                                             <option value="Vacant">Vacant</option>
@@ -468,12 +468,12 @@ function MultiStepForm() {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label>Asking Rent (AED) <span className="required">*</span></label>
-                                        <input type="text" name="asking_rent" value={formData.asking_rent} onChange={handleChange} placeholder="Enter asking rent" />
+                                        <input type="text" name="asking_rent" value={formData.asking_rent} onChange={handleChange} placeholder="Enter asking rent" required />
                                         <span className="field-validation must">MUST</span>
                                     </div>
                                     <div className="form-group">
                                         <label>Number of Cheques <span className="required">*</span></label>
-                                        <select name="number_of_chq" value={formData.number_of_chq} onChange={handleChange}>
+                                        <select name="number_of_chq" value={formData.number_of_chq} onChange={handleChange} required>
                                             <option value="">Select number of cheques</option>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -510,12 +510,12 @@ function MultiStepForm() {
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Property Code <span className="required">*</span></label>
-                                    <input type="text" name="property_code" value={formData.property_code} onChange={handleChange} placeholder="Enter property code" />
+                                    <input type="text" name="property_code" value={formData.property_code} onChange={handleChange} placeholder="Enter property code" required />
                                     <span className="field-validation must">MUST</span>
                                 </div>
                                 <div className="form-group">
                                     <label>Emirate <span className="required">*</span></label>
-                                    <select name="emirate" value={formData.emirate} onChange={handleChange}>
+                                    <select name="emirate" value={formData.emirate} onChange={handleChange} required>
                                         <option value="">Select Emirate</option>
                                         <option value="Dubai">Dubai</option>
                                         <option value="Abu Dhabi">Abu Dhabi</option>
@@ -531,12 +531,12 @@ function MultiStepForm() {
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Area / Community <span className="required">*</span></label>
-                                    <input type="text" name="area_community" value={formData.area_community} onChange={handleChange} placeholder="Enter area or community" />
+                                    <input type="text" name="area_community" value={formData.area_community} onChange={handleChange} placeholder="Enter area or community" required />
                                     <span className="field-validation must">MUST</span>
                                 </div>
                                 <div className="form-group">
                                     <label>Building Name / Villa Community <span className="required">*</span></label>
-                                    <input type="text" name="building_name" value={formData.building_name} onChange={handleChange} placeholder="Enter building or villa community name" />
+                                    <input type="text" name="building_name" value={formData.building_name} onChange={handleChange} placeholder="Enter building or villa community name" required />
                                     <span className="field-validation must">MUST</span>
                                 </div>
                             </div>
@@ -564,7 +564,7 @@ function MultiStepForm() {
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Bedrooms <span className="required">*</span></label>
-                                    <select name="bedrooms" value={formData.bedrooms} onChange={handleChange}>
+                                    <select name="bedrooms" value={formData.bedrooms} onChange={handleChange} required>
                                         <option value="">Select bedrooms</option>
                                         <option value="Studio">Studio</option>
                                         <option value="1">1</option>
@@ -578,7 +578,7 @@ function MultiStepForm() {
                                 </div>
                                 <div className="form-group">
                                     <label>Bathrooms <span className="required">*</span></label>
-                                    <select name="bathrooms" value={formData.bathrooms} onChange={handleChange}>
+                                    <select name="bathrooms" value={formData.bathrooms} onChange={handleChange} required>
                                         <option value="">Select bathrooms</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -592,7 +592,7 @@ function MultiStepForm() {
                             <div className="form-row">
                                 <div className="form-group">
                                     <label>Size (Sq. Ft) <span className="required">*</span></label>
-                                    <input type="text" name="size_sqft" value={formData.size_sqft} onChange={handleChange} placeholder="Enter size in square feet" />
+                                    <input type="text" name="size_sqft" value={formData.size_sqft} onChange={handleChange} placeholder="Enter size in square feet" required />
                                     <span className="field-validation must">MUST</span>
                                 </div>
                                 <div className="form-group">
