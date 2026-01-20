@@ -18,31 +18,79 @@ function doGet(e) {
 
 function doPost(e) {
   try {
+    console.log('=== GOOGLE APPS SCRIPT DEBUG ===');
+    console.log('Request received at:', new Date().toISOString());
+    
     const folder = DriveApp.getFolderById(FOLDER_ID);
     const data = JSON.parse(e.postData.contents);
     
-    // Create a subfolder for this property using property code
-    const propertyCode = data.property_code || 'NO_CODE';
+    console.log('Parsed data keys:', Object.keys(data));
+    console.log('Property code:', data.property_code);
+    console.log('Images count:', data.property_images?.length || 0);
+    console.log('Documents count:', data.documents?.length || 0);
     
-    // Check if folder already exists, if so, use it; otherwise create new
+    // Validate property code
+    const propertyCode = data.property_code?.trim();
+    if (!propertyCode || propertyCode === '' || propertyCode === 'NO_CODE') {
+      throw new Error('Valid property code is required');
+    }
+    
+    // Create a subfolder for this property using property code
     let subfolder;
     const existingFolders = folder.getFoldersByName(propertyCode);
     if (existingFolders.hasNext()) {
       subfolder = existingFolders.next();
-      Logger.log('Using existing folder: ' + propertyCode);
+      console.log('Using existing folder: ' + propertyCode);
     } else {
-      subfolder = folder.createFolder(propertyCode);
-      Logger.log('Created new folder: ' + propertyCode);
+      try {
+        subfolder = folder.createFolder(propertyCode);
+        console.log('Created new folder: ' + propertyCode);
+        
+        // Wait a moment for folder creation to complete
+        Utilities.sleep(500);
+        
+        // Verify folder was created
+        if (!subfolder || !subfolder.getId()) {
+          throw new Error('Failed to create folder - folder object is invalid');
+        }
+        
+      } catch (folderError) {
+        console.error('Folder creation error:', folderError.toString());
+        throw new Error('Failed to create folder: ' + folderError.toString());
+      }
     }
     
     const uploadedFiles = [];
+    let totalFilesProcessed = 0;
     
     // Process property images
     if (data.property_images && data.property_images.length > 0) {
-      const imagesFolder = subfolder.createFolder('Property Images');
+      console.log('Processing property images...');
+      
+      let imagesFolder;
+      try {
+        // Check if images folder already exists
+        const existingImagesFolders = subfolder.getFoldersByName('Property Images');
+        if (existingImagesFolders.hasNext()) {
+          imagesFolder = existingImagesFolders.next();
+        } else {
+          imagesFolder = subfolder.createFolder('Property Images');
+          Utilities.sleep(200); // Brief pause after folder creation
+        }
+      } catch (imgFolderError) {
+        console.error('Images folder creation error:', imgFolderError.toString());
+        throw new Error('Failed to create images folder: ' + imgFolderError.toString());
+      }
       
       data.property_images.forEach((fileData, index) => {
         try {
+          console.log(`Processing image ${index + 1}/${data.property_images.length}: ${fileData.name}`);
+          
+          // Validate file data
+          if (!fileData.data || !fileData.name || !fileData.mimeType) {
+            throw new Error('Invalid file data structure');
+          }
+          
           // Decode base64 file data
           const blob = Utilities.newBlob(
             Utilities.base64Decode(fileData.data),
@@ -50,72 +98,147 @@ function doPost(e) {
             fileData.name
           );
           
+          // Validate blob
+          if (!blob || blob.getBytes().length === 0) {
+            throw new Error('Failed to create blob or blob is empty');
+          }
+          
           const file = imagesFolder.createFile(blob);
+          
+          // Verify file was created
+          if (!file || !file.getId()) {
+            throw new Error('File creation failed - file object is invalid');
+          }
+          
           file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
           
           uploadedFiles.push({
             name: fileData.name,
             url: file.getUrl(),
             id: file.getId(),
-            type: 'image'
+            type: 'image',
+            size: blob.getBytes().length
           });
           
-          Logger.log('Uploaded image: ' + fileData.name);
+          totalFilesProcessed++;
+          console.log(`✅ Uploaded image: ${fileData.name} (${blob.getBytes().length} bytes)`);
+          
         } catch (err) {
-          Logger.log('Error uploading image: ' + err.toString());
+          console.error(`❌ Error uploading image ${fileData.name}:`, err.toString());
+          throw new Error(`Failed to upload image "${fileData.name}": ${err.toString()}`);
         }
       });
     }
     
     // Process documents
     if (data.documents && data.documents.length > 0) {
-      const docsFolder = subfolder.createFolder('Documents');
+      console.log('Processing documents...');
+      
+      let docsFolder;
+      try {
+        // Check if documents folder already exists
+        const existingDocsFolders = subfolder.getFoldersByName('Documents');
+        if (existingDocsFolders.hasNext()) {
+          docsFolder = existingDocsFolders.next();
+        } else {
+          docsFolder = subfolder.createFolder('Documents');
+          Utilities.sleep(200); // Brief pause after folder creation
+        }
+      } catch (docsFolderError) {
+        console.error('Documents folder creation error:', docsFolderError.toString());
+        throw new Error('Failed to create documents folder: ' + docsFolderError.toString());
+      }
       
       data.documents.forEach((fileData, index) => {
         try {
+          console.log(`Processing document ${index + 1}/${data.documents.length}: ${fileData.name}`);
+          
+          // Validate file data
+          if (!fileData.data || !fileData.name || !fileData.mimeType) {
+            throw new Error('Invalid file data structure');
+          }
+          
           const blob = Utilities.newBlob(
             Utilities.base64Decode(fileData.data),
             fileData.mimeType,
             fileData.name
           );
           
+          // Validate blob
+          if (!blob || blob.getBytes().length === 0) {
+            throw new Error('Failed to create blob or blob is empty');
+          }
+          
           const file = docsFolder.createFile(blob);
+          
+          // Verify file was created
+          if (!file || !file.getId()) {
+            throw new Error('File creation failed - file object is invalid');
+          }
+          
           file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
           
           uploadedFiles.push({
             name: fileData.name,
             url: file.getUrl(),
             id: file.getId(),
-            type: 'document'
+            type: 'document',
+            size: blob.getBytes().length
           });
           
-          Logger.log('Uploaded document: ' + fileData.name);
+          totalFilesProcessed++;
+          console.log(`✅ Uploaded document: ${fileData.name} (${blob.getBytes().length} bytes)`);
+          
         } catch (err) {
-          Logger.log('Error uploading document: ' + err.toString());
+          console.error(`❌ Error uploading document ${fileData.name}:`, err.toString());
+          throw new Error(`Failed to upload document "${fileData.name}": ${err.toString()}`);
         }
       });
     }
     
-    Logger.log('Total files uploaded: ' + uploadedFiles.length);
+    console.log(`✅ Upload completed successfully!`);
+    console.log(`Total files processed: ${totalFilesProcessed}`);
+    console.log(`Folder URL: ${subfolder.getUrl()}`);
     
-    return ContentService.createTextOutput(JSON.stringify({
+    const response = {
       success: true,
       folderUrl: subfolder.getUrl(),
       folderId: subfolder.getId(),
       files: uploadedFiles,
-      message: 'Uploaded ' + uploadedFiles.length + ' files successfully'
-    }))
+      message: `Uploaded ${uploadedFiles.length} files successfully`,
+      debug: {
+        propertyCode: propertyCode,
+        totalFiles: totalFilesProcessed,
+        timestamp: new Date().toISOString()
+      }
+    };
+    
+    console.log('Sending response:', JSON.stringify(response, null, 2));
+    
+    return ContentService.createTextOutput(JSON.stringify(response))
     .setMimeType(ContentService.MimeType.JSON)
     .setHeader('Access-Control-Allow-Origin', '*')
     .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
     .setHeader('Access-Control-Allow-Headers', 'Content-Type');
     
   } catch (error) {
-    Logger.log('Error: ' + error.toString());
-    return ContentService.createTextOutput(JSON.stringify({
+    const errorMessage = error.toString();
+    console.error('❌ CRITICAL ERROR:', errorMessage);
+    console.error('Error stack:', error.stack);
+    
+    const errorResponse = {
       success: false,
-      error: error.toString()
-    }))
+      error: errorMessage,
+      debug: {
+        timestamp: new Date().toISOString(),
+        errorType: error.name || 'Unknown',
+        stack: error.stack
+      }
+    };
+    
+    console.log('Sending error response:', JSON.stringify(errorResponse, null, 2));
+    
+    return ContentService.createTextOutput(JSON.stringify(errorResponse))
     .setMimeType(ContentService.MimeType.JSON)
     .setHeader('Access-Control-Allow-Origin', '*')
     .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')

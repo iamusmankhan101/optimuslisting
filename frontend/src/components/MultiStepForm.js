@@ -222,38 +222,85 @@ function MultiStepForm() {
         try {
             let driveUrls = { images: [], documents: [] };
             
-            // Upload files to Google Drive if any (optional, won't block submission)
+            // Upload files to Google Drive if any (required now)
             if (propertyImages.length > 0 || documents.length > 0) {
                 try {
                     setStatus({ type: 'info', message: 'Uploading files to Google Drive...' });
                     
-                    console.log('Property Code:', formData.property_code);
+                    // Validate property code before upload
+                    const propertyCode = formData.property_code?.trim();
+                    if (!propertyCode || propertyCode === '') {
+                        throw new Error('Property Code is required for file upload');
+                    }
+                    
+                    console.log('=== GOOGLE DRIVE UPLOAD DEBUG ===');
+                    console.log('Property Code:', propertyCode);
                     console.log('Images to upload:', propertyImages.length);
                     console.log('Documents to upload:', documents.length);
+                    console.log('API Base URL:', API_BASE);
                     
-                    // Convert files to base64
-                    const imageFiles = await Promise.all(propertyImages.map(fileToBase64));
-                    const documentFiles = await Promise.all(documents.map(fileToBase64));
+                    // Convert files to base64 with error handling
+                    let imageFiles = [];
+                    let documentFiles = [];
                     
+                    try {
+                        if (propertyImages.length > 0) {
+                            console.log('Converting images to base64...');
+                            imageFiles = await Promise.all(propertyImages.map(fileToBase64));
+                            console.log('Images converted successfully:', imageFiles.length);
+                        }
+                        
+                        if (documents.length > 0) {
+                            console.log('Converting documents to base64...');
+                            documentFiles = await Promise.all(documents.map(fileToBase64));
+                            console.log('Documents converted successfully:', documentFiles.length);
+                        }
+                    } catch (conversionError) {
+                        console.error('File conversion error:', conversionError);
+                        throw new Error(`Failed to process files: ${conversionError.message}`);
+                    }
+                    
+                    const uploadPayload = {
+                        property_code: propertyCode,
+                        property_images: imageFiles,
+                        documents: documentFiles
+                    };
+                    
+                    console.log('Upload payload size:', JSON.stringify(uploadPayload).length, 'bytes');
                     console.log('Sending to Google Drive via proxy...');
-                    // Use proxy endpoint to avoid CORS issues
+                    
+                    // Add timeout to the fetch request
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+                    
                     const driveResponse = await fetch(`${API_BASE}/upload-drive`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            property_code: formData.property_code || 'NO_CODE',
-                            property_images: imageFiles,
-                            documents: documentFiles
-                        })
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(uploadPayload),
+                        signal: controller.signal
                     });
                     
+                    clearTimeout(timeoutId);
+                    
                     console.log('Drive response status:', driveResponse.status);
+                    console.log('Drive response headers:', Object.fromEntries(driveResponse.headers.entries()));
+                    
+                    if (!driveResponse.ok) {
+                        const errorText = await driveResponse.text();
+                        console.error('Drive response error:', errorText);
+                        throw new Error(`Google Drive API error (${driveResponse.status}): ${errorText}`);
+                    }
+                    
                     const driveData = await driveResponse.json();
                     console.log('Drive response data:', driveData);
                     
                     if (driveData.success) {
                         driveUrls = {
                             folderUrl: driveData.folderUrl,
+                            folderId: driveData.folderId,
                             images: driveData.files.filter(f => f.type === 'image').map(f => f.url),
                             documents: driveData.files.filter(f => f.type === 'document').map(f => f.url)
                         };
@@ -261,17 +308,38 @@ function MultiStepForm() {
                         // Update formData with Drive URLs
                         formData.property_images = driveUrls.images.join(', ');
                         formData.documents = driveUrls.documents.join(', ');
+                        
+                        console.log('✅ Google Drive upload successful!');
+                        console.log('Folder URL:', driveUrls.folderUrl);
+                        console.log('Files uploaded:', driveData.files.length);
+                        
+                        setStatus({ type: 'info', message: `Files uploaded successfully! ${driveData.files.length} files uploaded to Google Drive.` });
+                        
+                        // Brief pause to show success message
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        
                     } else {
-                        console.warn('Google Drive upload failed:', driveData.error);
-                        // Store file names instead
-                        formData.property_images = propertyImages.map(f => f.name).join(', ');
-                        formData.documents = documents.map(f => f.name).join(', ');
+                        console.error('❌ Google Drive upload failed:', driveData.error);
+                        throw new Error(`Google Drive upload failed: ${driveData.error || 'Unknown error'}`);
                     }
                 } catch (driveError) {
-                    console.error('Google Drive upload error:', driveError);
-                    // Continue with submission, just store file names
-                    formData.property_images = propertyImages.map(f => f.name).join(', ');
-                    formData.documents = documents.map(f => f.name).join(', ');
+                    console.error('❌ Google Drive upload error:', driveError);
+                    
+                    // Show specific error to user
+                    let errorMessage = 'Google Drive upload failed: ';
+                    if (driveError.name === 'AbortError') {
+                        errorMessage += 'Upload timeout (30s exceeded). Please try again with fewer/smaller files.';
+                    } else if (driveError.message.includes('property_code')) {
+                        errorMessage += 'Property Code is required for file upload.';
+                    } else if (driveError.message.includes('Failed to process files')) {
+                        errorMessage += 'File processing error. Please check file formats and sizes.';
+                    } else {
+                        errorMessage += driveError.message;
+                    }
+                    
+                    setStatus({ type: 'error', message: errorMessage });
+                    setLoading(false);
+                    return; // Stop submission if Google Drive upload fails
                 }
             }
             
