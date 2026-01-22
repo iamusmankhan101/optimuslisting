@@ -17,7 +17,7 @@ function doGet(e) {
     maxFiles: 30,
     maxFileSize: '10MB'
   };
-  
+
   return ContentService
     .createTextOutput(JSON.stringify(response))
     .setMimeType(ContentService.MimeType.JSON);
