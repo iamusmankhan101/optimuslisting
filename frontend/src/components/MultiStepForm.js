@@ -227,6 +227,10 @@ function MultiStepForm() {
                 try {
                     setStatus({ type: 'info', message: 'Uploading files to Google Drive...' });
                     
+                    // Show file count in status
+                    const totalFilesToUpload = propertyImages.length + documents.length;
+                    setStatus({ type: 'info', message: `Uploading ${totalFilesToUpload} files to Google Drive...` });
+                    
                     // Validate property code before upload
                     const propertyCode = formData.property_code?.trim();
                     if (!propertyCode || propertyCode === '') {
@@ -269,9 +273,9 @@ function MultiStepForm() {
                     console.log('Upload payload size:', JSON.stringify(uploadPayload).length, 'bytes');
                     console.log('Sending to Google Drive via proxy...');
                     
-                    // Add timeout to the fetch request
+                    // Add timeout to the fetch request - increase to 60 seconds
                     const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+                    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
                     
                     const driveResponse = await fetch(`${API_BASE}/upload-drive`, {
                         method: 'POST',
@@ -328,7 +332,7 @@ function MultiStepForm() {
                     // Show specific error to user
                     let errorMessage = 'Google Drive upload failed: ';
                     if (driveError.name === 'AbortError') {
-                        errorMessage += 'Upload timeout (30s exceeded). Please try again with fewer/smaller files.';
+                        errorMessage += 'Upload timeout (60s exceeded). Please try again with fewer/smaller files.';
                     } else if (driveError.message.includes('property_code')) {
                         errorMessage += 'Property Code is required for file upload.';
                     } else if (driveError.message.includes('Failed to process files')) {
@@ -754,8 +758,23 @@ function MultiStepForm() {
                                     required
                                     onChange={(e) => {
                                         const files = Array.from(e.target.files).slice(0, 30);
-                                        setPropertyImages(files);
-                                        setFormData({...formData, property_images: files.map(f => f.name).join(', ')});
+                                        
+                                        // Filter out files larger than 10MB
+                                        const validFiles = files.filter(file => {
+                                            if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                                                console.warn(`File ${file.name} is too large (${(file.size / 1024 / 1024).toFixed(2)}MB). Maximum size is 10MB.`);
+                                                return false;
+                                            }
+                                            return true;
+                                        });
+                                        
+                                        if (validFiles.length !== files.length) {
+                                            const skippedCount = files.length - validFiles.length;
+                                            alert(`${skippedCount} file(s) were skipped because they exceed the 10MB size limit.`);
+                                        }
+                                        
+                                        setPropertyImages(validFiles);
+                                        setFormData({...formData, property_images: validFiles.map(f => f.name).join(', ')});
                                     }}
                                 />
                                 <span className="field-validation must">REQUIRED</span>
@@ -782,8 +801,23 @@ function MultiStepForm() {
                                     required
                                     onChange={(e) => {
                                         const files = Array.from(e.target.files).slice(0, 30);
-                                        setDocuments(files);
-                                        setFormData({...formData, documents: files.map(f => f.name).join(', ')});
+                                        
+                                        // Filter out files larger than 10MB
+                                        const validFiles = files.filter(file => {
+                                            if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                                                console.warn(`File ${file.name} is too large (${(file.size / 1024 / 1024).toFixed(2)}MB). Maximum size is 10MB.`);
+                                                return false;
+                                            }
+                                            return true;
+                                        });
+                                        
+                                        if (validFiles.length !== files.length) {
+                                            const skippedCount = files.length - validFiles.length;
+                                            alert(`${skippedCount} file(s) were skipped because they exceed the 10MB size limit.`);
+                                        }
+                                        
+                                        setDocuments(validFiles);
+                                        setFormData({...formData, documents: validFiles.map(f => f.name).join(', ')});
                                     }}
                                 />
                                 <span className="field-validation must">REQUIRED</span>
