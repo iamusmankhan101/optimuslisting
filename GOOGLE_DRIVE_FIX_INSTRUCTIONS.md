@@ -20,7 +20,7 @@ The error `TypeError: ContentService.createTextOutput(...).setMimeType(...).setH
 // This version fixes the setHeader error and improves reliability
 
 // Configuration - Your Google Drive Folder ID
-const FOLDER_ID = '1mZHljfLGBsUeae3GzlCln3ZRgG509-IIn7F2VwxcLC7ykCtwgqJNoswUBa3FaCsm93qAHuRV';
+const FOLDER_ID = '14HIhuxU7EXO_vfaVxaDWAEtBQiQzarBY';
 
 // Handle GET requests
 function doGet(e) {
