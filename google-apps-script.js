@@ -10,24 +10,21 @@ function doGet(e) {
     status: 'ok',
     message: 'Google Drive Upload API is running'
   }))
-  .setMimeType(ContentService.MimeType.JSON)
-  .setHeader('Access-Control-Allow-Origin', '*')
-  .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-  .setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  .setMimeType(ContentService.MimeType.JSON);
 }
 
 function doPost(e) {
   try {
-    console.log('=== GOOGLE APPS SCRIPT DEBUG ===');
-    console.log('Request received at:', new Date().toISOString());
+    Logger.log('=== GOOGLE APPS SCRIPT DEBUG ===');
+    Logger.log('Request received at: ' + new Date().toISOString());
     
     const folder = DriveApp.getFolderById(FOLDER_ID);
     const data = JSON.parse(e.postData.contents);
     
-    console.log('Parsed data keys:', Object.keys(data));
-    console.log('Property code:', data.property_code);
-    console.log('Images count:', data.property_images?.length || 0);
-    console.log('Documents count:', data.documents?.length || 0);
+    Logger.log('Parsed data keys: ' + Object.keys(data).join(', '));
+    Logger.log('Property code: ' + data.property_code);
+    Logger.log('Images count: ' + (data.property_images?.length || 0));
+    Logger.log('Documents count: ' + (data.documents?.length || 0));
     
     // Validate property code
     const propertyCode = data.property_code?.trim();
@@ -40,11 +37,11 @@ function doPost(e) {
     const existingFolders = folder.getFoldersByName(propertyCode);
     if (existingFolders.hasNext()) {
       subfolder = existingFolders.next();
-      console.log('Using existing folder: ' + propertyCode);
+      Logger.log('Using existing folder: ' + propertyCode);
     } else {
       try {
         subfolder = folder.createFolder(propertyCode);
-        console.log('Created new folder: ' + propertyCode);
+        Logger.log('Created new folder: ' + propertyCode);
         
         // Wait a moment for folder creation to complete
         Utilities.sleep(500);
@@ -55,7 +52,7 @@ function doPost(e) {
         }
         
       } catch (folderError) {
-        console.error('Folder creation error:', folderError.toString());
+        Logger.log('Folder creation error: ' + folderError.toString());
         throw new Error('Failed to create folder: ' + folderError.toString());
       }
     }
@@ -65,7 +62,7 @@ function doPost(e) {
     
     // Process property images
     if (data.property_images && data.property_images.length > 0) {
-      console.log('Processing property images...');
+      Logger.log('Processing property images...');
       
       let imagesFolder;
       try {
@@ -78,13 +75,13 @@ function doPost(e) {
           Utilities.sleep(200); // Brief pause after folder creation
         }
       } catch (imgFolderError) {
-        console.error('Images folder creation error:', imgFolderError.toString());
+        Logger.log('Images folder creation error: ' + imgFolderError.toString());
         throw new Error('Failed to create images folder: ' + imgFolderError.toString());
       }
       
       data.property_images.forEach((fileData, index) => {
         try {
-          console.log(`Processing image ${index + 1}/${data.property_images.length}: ${fileData.name}`);
+          Logger.log('Processing image ' + (index + 1) + '/' + data.property_images.length + ': ' + fileData.name);
           
           // Validate file data
           if (!fileData.data || !fileData.name || !fileData.mimeType) {
@@ -121,18 +118,18 @@ function doPost(e) {
           });
           
           totalFilesProcessed++;
-          console.log(`✅ Uploaded image: ${fileData.name} (${blob.getBytes().length} bytes)`);
+          Logger.log('✅ Uploaded image: ' + fileData.name + ' (' + blob.getBytes().length + ' bytes)');
           
         } catch (err) {
-          console.error(`❌ Error uploading image ${fileData.name}:`, err.toString());
-          throw new Error(`Failed to upload image "${fileData.name}": ${err.toString()}`);
+          Logger.log('❌ Error uploading image ' + fileData.name + ': ' + err.toString());
+          throw new Error('Failed to upload image "' + fileData.name + '": ' + err.toString());
         }
       });
     }
     
     // Process documents
     if (data.documents && data.documents.length > 0) {
-      console.log('Processing documents...');
+      Logger.log('Processing documents...');
       
       let docsFolder;
       try {
@@ -145,13 +142,13 @@ function doPost(e) {
           Utilities.sleep(200); // Brief pause after folder creation
         }
       } catch (docsFolderError) {
-        console.error('Documents folder creation error:', docsFolderError.toString());
+        Logger.log('Documents folder creation error: ' + docsFolderError.toString());
         throw new Error('Failed to create documents folder: ' + docsFolderError.toString());
       }
       
       data.documents.forEach((fileData, index) => {
         try {
-          console.log(`Processing document ${index + 1}/${data.documents.length}: ${fileData.name}`);
+          Logger.log('Processing document ' + (index + 1) + '/' + data.documents.length + ': ' + fileData.name);
           
           // Validate file data
           if (!fileData.data || !fileData.name || !fileData.mimeType) {
@@ -187,25 +184,25 @@ function doPost(e) {
           });
           
           totalFilesProcessed++;
-          console.log(`✅ Uploaded document: ${fileData.name} (${blob.getBytes().length} bytes)`);
+          Logger.log('✅ Uploaded document: ' + fileData.name + ' (' + blob.getBytes().length + ' bytes)');
           
         } catch (err) {
-          console.error(`❌ Error uploading document ${fileData.name}:`, err.toString());
-          throw new Error(`Failed to upload document "${fileData.name}": ${err.toString()}`);
+          Logger.log('❌ Error uploading document ' + fileData.name + ': ' + err.toString());
+          throw new Error('Failed to upload document "' + fileData.name + '": ' + err.toString());
         }
       });
     }
     
-    console.log(`✅ Upload completed successfully!`);
-    console.log(`Total files processed: ${totalFilesProcessed}`);
-    console.log(`Folder URL: ${subfolder.getUrl()}`);
+    Logger.log('✅ Upload completed successfully!');
+    Logger.log('Total files processed: ' + totalFilesProcessed);
+    Logger.log('Folder URL: ' + subfolder.getUrl());
     
     const response = {
       success: true,
       folderUrl: subfolder.getUrl(),
       folderId: subfolder.getId(),
       files: uploadedFiles,
-      message: `Uploaded ${uploadedFiles.length} files successfully`,
+      message: 'Uploaded ' + uploadedFiles.length + ' files successfully',
       debug: {
         propertyCode: propertyCode,
         totalFiles: totalFilesProcessed,
@@ -213,36 +210,28 @@ function doPost(e) {
       }
     };
     
-    console.log('Sending response:', JSON.stringify(response, null, 2));
+    Logger.log('Sending response: ' + JSON.stringify(response));
     
     return ContentService.createTextOutput(JSON.stringify(response))
-    .setMimeType(ContentService.MimeType.JSON)
-    .setHeader('Access-Control-Allow-Origin', '*')
-    .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-    .setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    .setMimeType(ContentService.MimeType.JSON);
     
   } catch (error) {
     const errorMessage = error.toString();
-    console.error('❌ CRITICAL ERROR:', errorMessage);
-    console.error('Error stack:', error.stack);
+    Logger.log('❌ CRITICAL ERROR: ' + errorMessage);
     
     const errorResponse = {
       success: false,
       error: errorMessage,
       debug: {
         timestamp: new Date().toISOString(),
-        errorType: error.name || 'Unknown',
-        stack: error.stack
+        errorType: error.name || 'Unknown'
       }
     };
     
-    console.log('Sending error response:', JSON.stringify(errorResponse, null, 2));
+    Logger.log('Sending error response: ' + JSON.stringify(errorResponse));
     
     return ContentService.createTextOutput(JSON.stringify(errorResponse))
-    .setMimeType(ContentService.MimeType.JSON)
-    .setHeader('Access-Control-Allow-Origin', '*')
-    .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-    .setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
