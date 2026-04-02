@@ -43,17 +43,36 @@ export default async function handler(req, res) {
 
     // Parse and return the response
     try {
+      if (responseText.includes('<!DOCTYPE html>') || responseText.includes('<html')) {
+        let errorHint = 'Check if the Google Apps Script is properly deployed as a Web App with access set to "Anyone".';
+        
+        if (responseText.includes('setHeader is not a function')) {
+          errorHint = 'CRITICAL: The script code is outdated and contains the broken ".setHeader()" calls. Replace the script code with the "Minimal Working" version.';
+        } else if (responseText.includes('Authorization required') || responseText.includes('Login')) {
+          errorHint = 'The script requires authorization. Run it once in the Google Apps Script editor to grant permissions.';
+        } else if (responseText.includes('Sorry, unable to open the file at present')) {
+          errorHint = 'Google internal error or temporary lockout. Try again in a few minutes or recreate the deployment.';
+        }
+
+        res.status(500).json({
+          success: false,
+          error: 'Google Apps Script returned HTML instead of JSON',
+          hint: errorHint,
+          details: responseText.substring(0, 500)
+        });
+        return;
+      }
+
       const data = JSON.parse(responseText);
       console.log('Parsed response:', data);
       res.status(response.ok ? 200 : 500).json(data);
     } catch (parseError) {
       console.error('Failed to parse Google Drive response:', parseError);
-      console.error('Full response text:', responseText);
       res.status(500).json({
         success: false,
-        error: 'Invalid response from Google Drive - likely HTML redirect or authorization issue',
+        error: 'Invalid response format from Google Drive',
         details: responseText.substring(0, 1000),
-        hint: 'Check if the Google Apps Script is properly deployed and authorized'
+        hint: 'Check if the Google Apps Script is properly deployed and the URL is correct'
       });
     }
 
