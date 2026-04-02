@@ -25,8 +25,13 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('Proxying request to Google Drive:', driveUploadUrl);
+    console.log('--- DEBUG: GOOGLE DRIVE PROXY START ---');
+    console.log('Environment URL:', driveUploadUrl);
+    console.log('Property Code:', req.body.property_code);
+    console.log('Images count:', req.body.property_images?.length || 0);
+    console.log('Documents count:', req.body.documents?.length || 0);
     console.log('Payload size:', JSON.stringify(req.body).length, 'bytes');
+    console.log('---------------------------------------');
 
     // Forward the request to Google Apps Script
     const response = await fetch(driveUploadUrl, {
