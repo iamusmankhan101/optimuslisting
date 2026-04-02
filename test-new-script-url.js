@@ -1,11 +1,11 @@
 // Test the new Google Apps Script URL
 // Run this to verify the updated script is working correctly
 
-const NEW_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBelkvTugGyu81fO3mRMIsN-yIte4ratDNmTyg-8Xy8BcvtQyWSKQa-1mMgWoL1mGeNQ/exec';
+const NEW_GOOGLE_DRIVE_URL = 'https://script.google.com/macros/s/AKfycbzFskemg_xbcKHuoCaPPuKb0QM1xKDPfpOn8ydsOiH8gG9OnKy3WESWj5AQE8bMY4O4/exec';
 
 async function testNewScriptURL() {
     console.log('🧪 Testing New Google Apps Script URL...');
-    console.log('URL:', NEW_SCRIPT_URL);
+    console.log('URL:', NEW_GOOGLE_DRIVE_URL);
     
     // Test 1: GET request (health check)
     console.log('\n=== TEST 1: GET Request (Health Check) ===');

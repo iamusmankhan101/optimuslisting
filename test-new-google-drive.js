@@ -1,11 +1,11 @@
 // Test script for the new Google Drive upload URL
 // Run this to verify the new Google Apps Script is working
 
-const NEW_GOOGLE_DRIVE_URL = 'https://script.google.com/macros/s/AKfycbz5oOecP0QWQScrLSRIkgn24_fSqxcTspxR3ht8WleV6-ofl27qc9tz0eg34yBCoUfpgQ/exec';
+const NEW_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzFskemg_xbcKHuoCaPPuKb0QM1xKDPfpOn8ydsOiH8gG9OnKy3WESWj5AQE8bMY4O4/exec';
 
 async function testNewGoogleDriveScript() {
     console.log('🧪 Testing New Google Drive Script...');
-    console.log('URL:', NEW_GOOGLE_DRIVE_URL);
+    console.log('URL:', NEW_SCRIPT_URL);
     
     // Test 1: GET request to check if script is running
     console.log('\n=== TEST 1: GET Request (Health Check) ===');
