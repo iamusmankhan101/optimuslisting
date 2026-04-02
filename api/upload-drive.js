@@ -70,6 +70,7 @@ export default async function handler(req, res) {
 
       const data = JSON.parse(responseText);
       console.log('Parsed response:', data);
+      data.proxy_version = '1.0.3-debug';
       res.status(response.ok ? 200 : 500).json(data);
     } catch (parseError) {
       console.error('Failed to parse Google Drive response:', parseError);
