@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 
-dotenv.config({ path: '.env.local' });
+dotenv.config({ path: '.env.development.local' });
 
 async function testDriveUpload() {
   console.log('🧪 Testing Google Drive Upload...\n');

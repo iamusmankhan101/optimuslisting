@@ -7,7 +7,7 @@ Check that `REACT_APP_GOOGLE_DRIVE_UPLOAD_URL` is set in:
 - `frontend/.env.local` (for local development)
 - Vercel Environment Variables (for production)
 
-Current URL: `https://script.google.com/macros/s/AKfycbxBSD9XvwKr7Lg0Y4iJeqFV1vCR3jYGLuV3sGB4l8AJqCV8-FiPG5iy0jt-PlssQL6o/exec`
+Current URL: `https://script.google.com/macros/s/AKfycbzFskemg_xbcKHuoCaPPuKb0QM1xKDPfpOn8ydsOiH8gG9OnKy3WESWj5AQE8bMY4O4/exec`
 
 ### 2. Check Apps Script Deployment
 1. Go to your Apps Script project
@@ -118,7 +118,7 @@ console.log('Drive response:', driveData);
 Test the upload endpoint directly:
 
 ```bash
-curl -X POST "https://script.google.com/macros/s/AKfycbxBSD9XvwKr7Lg0Y4iJeqFV1vCR3jYGLuV3sGB4l8AJqCV8-FiPG5iy0jt-PlssQL6o/exec" \
+curl -X POST "https://script.google.com/macros/s/AKfycbzFskemg_xbcKHuoCaPPuKb0QM1xKDPfpOn8ydsOiH8gG9OnKy3WESWj5AQE8bMY4O4/exec" \
   -H "Content-Type: application/json" \
   -d '{
     "property_code": "TEST-MANUAL",
